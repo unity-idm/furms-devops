@@ -1,0 +1,30 @@
+---
+- name: Initialize installation timestamp
+  hosts: local_only
+  tasks:
+  - name: Get installation timestamp
+    shell: "date +%Y%m%d-%H%M%S"
+    register: installTimestampResult
+  - name: Persist installation timestamp
+    set_fact:
+      installTimestamp: "{{ installTimestampResult.stdout }}"
+
+- name: Create base directory schema
+  hosts: all_servers
+  gather_facts: no
+  tasks:
+  - name: create workspace folder
+    file:
+      state: directory
+      path: "{{ workspaceDir }}"
+      mode: '0750'
+
+- import_playbook: download-furms.yml
+  vars:
+    execTS: "{{hostvars['localhost']['installTimestamp']}}"
+
+- import_playbook: create-app-symlink.yml
+  vars:
+    execTS: "{{hostvars['localhost']['installTimestamp']}}"
+
+- import_playbook: install-configs.yml
