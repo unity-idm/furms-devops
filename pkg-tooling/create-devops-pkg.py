@@ -45,13 +45,21 @@ def parse_arguments():
     group.add_argument('--clean', help='remove target directory', action='store_true')
     return parser.parse_args()
 
+def remove_directory(dir):
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+
 def make_tarfile(output_filename, source_dir):
     with tarfile.open(output_filename, "w:gz") as tar:
         tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def create_ansible_deliverable(version):
     tar_ball = os.path.join(Env.TARGET_DIR_PATH, "ansible-%s.tar.gz" % version)
-    make_tarfile(tar_ball, Env.ANSIBLE_DIR_PATH)
+    ansible_content = os.path.join(Env.TARGET_DIR_PATH, "ansible-%s" % version)
+    remove_directory(ansible_content)
+    shutil.copytree(Env.ANSIBLE_DIR_PATH, ansible_content)
+    make_tarfile(tar_ball, ansible_content)
+    remove_directory(ansible_content)
 
 def copy_installation_script_to_target():
     '''
@@ -97,8 +105,7 @@ def create_bundle(version):
 
 def clean_bundle():
     print("Removing target directory")
-    if os.path.exists(Env.TARGET_DIR_PATH):
-        shutil.rmtree(Env.TARGET_DIR_PATH)
+    remove_directory(Env.TARGET_DIR_PATH)
 
 def main():
     args = parse_arguments()
