@@ -1,0 +1,8 @@
+---
+- name: Setup FURMS service
+  gather_facts: no
+  hosts: furms_server
+  tasks:
+  - import_tasks: setup-server.yml
+
+

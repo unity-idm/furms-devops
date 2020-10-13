@@ -1,9 +1,9 @@
 [unity]
-local-unity		ansible_connection=local installDir={{playbook_dir}}/workspace/ansible-test/unity port=8433
+local-unity		ansible_connection=local 
 
 
-[furms-service]
-local-furms-service		ansible_connection=local installDir={{playbook_dir}}/workspace/ansible-test/furms-service port=8434
+[furms_server]
+local-furms-server		ansible_connection=local
 
 
 #Do not edit below
@@ -13,5 +13,5 @@ localhost		ansible_connection=local
 
 [all_servers:children]
 unity
-furms-service
+furms_server
 

@@ -1,0 +1,7 @@
+---
+- name: Unity-IdM installation
+  gather_facts: no
+  hosts: unity
+  tasks:
+  - import_tasks: setup-server.yml
+

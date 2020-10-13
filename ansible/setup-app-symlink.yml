@@ -1,0 +1,12 @@
+---
+- name: Setup symlink to the current installed revision
+  hosts: all_servers
+  tasks:
+  - name: create current symlink
+    file:
+      state: link
+      src: "{{installTimestamp}}"
+      dest: "{{runtimeAppDir}}"
+            
+            
+      

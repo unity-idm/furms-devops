@@ -9,22 +9,19 @@
     set_fact:
       installTimestamp: "{{ installTimestampResult.stdout }}"
 
-- name: Create base directory schema
-  hosts: all_servers
-  gather_facts: no
-  tasks:
-  - name: create workspace folder
-    file:
-      state: directory
-      path: "{{ workspaceDir }}"
-      mode: '0750'
-
-- import_playbook: download-furms.yml
+- import_playbook: setup-app-dirs.yml
   vars:
-    execTS: "{{hostvars['localhost']['installTimestamp']}}"
-
-- import_playbook: create-app-symlink.yml
+    installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
+  
+- import_playbook: setup-unity.yml
   vars:
-    execTS: "{{hostvars['localhost']['installTimestamp']}}"
+    installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
+  
+- import_playbook: setup-furms-server.yml
+  vars:
+    installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
 
-- import_playbook: install-configs.yml
+- import_playbook: setup-app-symlink.yml
+  vars:
+    installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
+

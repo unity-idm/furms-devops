@@ -1,0 +1,8 @@
+downloadURL: "{{unityDownloadURL}}"
+distributionFile: "{{workspaceAppDir}}/{{unityDistFile}}"
+
+serviceDir: "unity"
+serviceVersionedDir: "unity-server-{{unityVersion}}"
+serviceCurrentAppDir: "{{currentAppDir}}/{{serviceDir}}"
+serviceRuntimeAppDir: "{{runtimeAppDir}}/{{serviceDir}}"
+serviceInstallationDir: "{{currentAppDir}}/{{serviceVersionedDir}}"

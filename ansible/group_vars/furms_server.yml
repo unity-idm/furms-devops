@@ -1,0 +1,9 @@
+
+downloadURL: "{{furmsServiceDownloadURL}}"
+distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
+
+serviceDir: "furms-server"
+serviceVersionedDir: "furms-server-{{furmsServiceVersion}}"
+serviceCurrentAppDir: "{{currentAppDir}}/{{serviceDir}}"
+serviceRuntimeAppDir: "{{runtimeAppDir}}/{{serviceDir}}"
+serviceInstallationDir: "{{currentAppDir}}/{{serviceVersionedDir}}"

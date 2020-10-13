@@ -1,0 +1,16 @@
+---
+- name: Create application directories
+  hosts: all_servers
+  gather_facts: no
+  tasks:
+  - name: create folder for current installation
+    file:
+      state: directory
+      path: "{{ currentAppDir }}"
+      mode: '0750'
+  - name: create workspace folder
+    file:
+      state: directory
+      path: "{{ workspaceAppDir }}"
+      mode: '0750'
+

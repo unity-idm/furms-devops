@@ -1,0 +1,2 @@
+installDir: "{{playbook_dir}}/workspace/ansible-test"
+furmsVersion: 0.0.1

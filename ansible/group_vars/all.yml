@@ -1,0 +1,11 @@
+unity:
+  port: 2443
+
+furmsService:
+  port: 3443
+
+currentAppDir: "{{installDir}}/{{installTimestamp}}"
+workspaceAppDir: "{{installDir}}/workspace"
+runtimeAppDir: "{{installDir}}/current"
+
+
