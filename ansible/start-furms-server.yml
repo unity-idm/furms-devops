@@ -1,0 +1,4 @@
+- name: Start FURMS server
+  hosts: furms_server
+  tasks:
+  - import_tasks: start-server.yml

@@ -1,0 +1,5 @@
+---
+- name: Start unity
+  hosts: unity
+  tasks:
+  - import_tasks: start-server.yml

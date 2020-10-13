@@ -6,3 +6,8 @@ serviceVersionedDir: "unity-server-{{unityVersion}}"
 serviceCurrentAppDir: "{{currentAppDir}}/{{serviceDir}}"
 serviceRuntimeAppDir: "{{runtimeAppDir}}/{{serviceDir}}"
 serviceInstallationDir: "{{currentAppDir}}/{{serviceVersionedDir}}"
+
+serviceStartCmd: "bin/unity-idm-server-start"
+serviceStopCmd: "bin/unity-idm-server-stop"
+serviceURL: "https://{{unity.host}}:{{unity.port}}"
+healthCheckPath: "/console"

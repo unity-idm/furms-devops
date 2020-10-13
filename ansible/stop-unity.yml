@@ -1,0 +1,5 @@
+---
+- name: Stop unity
+  hosts: unity
+  tasks:
+  - import_tasks: stop-server.yml

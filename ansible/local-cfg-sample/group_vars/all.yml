@@ -1,2 +1,11 @@
+
 installDir: "{{playbook_dir}}/workspace/ansible-test"
 furmsVersion: 0.0.1
+
+unity:
+  host: localhost
+  port: 2443
+
+furmsServer:
+  host: localhost
+  port: 3443

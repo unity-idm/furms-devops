@@ -1,0 +1,9 @@
+- name: Include version vars
+  include_vars:
+    file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+
+- name: "stop server"
+  command: "./{{serviceStopCmd}}"
+  args:
+    chdir: "{{serviceRuntimeAppDir}}"
+

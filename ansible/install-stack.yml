@@ -25,3 +25,4 @@
   vars:
     installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
 
+- import_playbook: setup-configs.yml

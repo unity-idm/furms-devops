@@ -1,0 +1,16 @@
+---
+- name: Install config files to servers
+  hosts: all_servers
+  tasks:
+  - name: Include version vars
+    include_vars:
+      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+  - name: install configs
+    template:
+      src: "{{item.src}}"
+      dest: "{{serviceRuntimeAppDir}}/{{item.path}}"
+    with_filetree:
+      - "files/config_templates/{{furmsVersion}}/{{serviceDir}}/"
+    when: item.state == 'file'
+
+      

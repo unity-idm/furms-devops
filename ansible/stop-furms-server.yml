@@ -1,0 +1,5 @@
+---
+- name: Stop FURMS server
+  hosts: furms_server
+  tasks:
+  - import_tasks: stop-server.yml
