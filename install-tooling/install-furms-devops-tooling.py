@@ -35,7 +35,7 @@ __version__ = "__set_me__"
 class Env:
    __PACKAGE_HOST = "http://localhost:8000"
 
-   PACKAGED_ANSIBLE_DIR_NAME = "ansible-%s" % __version__
+   PACKAGED_ANSIBLE_DIR_NAME = "furms-devops-tooling-%s" % __version__
    PACKAGE_NAME = "%s.tar.gz" % PACKAGED_ANSIBLE_DIR_NAME
    PACKAGE_URL = "%s/%s" % (__PACKAGE_HOST, PACKAGE_NAME)
 
@@ -58,7 +58,7 @@ def create_link(unpacked_target_dir):
    pwd = os.getcwd()
    os.chdir(unpacked_target_dir)
 
-   ansible_link = "ansible"
+   ansible_link = "furms-devops-tooling"
    ansible_dir = Env.PACKAGED_ANSIBLE_DIR_NAME
    if os.path.exists(ansible_link):
       os.unlink(ansible_link)
@@ -76,8 +76,9 @@ def install_package(install_dir):
 
    unpacked_target_dir = target_dir = os.path.dirname(os.path.abspath(compressed_target_file))
    unpack_archive(compressed_target_file, unpacked_target_dir)
-   
+
    create_link(unpacked_target_dir)
+   os.remove(compressed_target_file)
 
 def main():
    args = parse_arguments()

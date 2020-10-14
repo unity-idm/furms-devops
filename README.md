@@ -21,7 +21,7 @@ devops tools on a target machine. The script is prepared for a specific version,
 with fixed version and creates the neccessary directory structure.
 
 ### Installation
-Assuming the script is available under `https://some_site_.io/0.0.1/install-furms-devops-tooling.py`, it can be used as follows:
+Assuming the script is available under `https://some_site_.io/0.0.1/install-furms-devops-tooling.py`, it can be used in one of the following ways:
 
 * Directly using the url like `curl -sSL https://some_site_.io/0.0.1/install-furms-devops-tooling.py | python`, which will result in
 package installation in current directory, or
@@ -38,10 +38,10 @@ optional arguments:
 ```
 
 # Workflow
-Assuming that devops scripts has been installed by aforementioned tool, the ansible deliverables are installed under `<install-dir>/ansible` directory,
+Assuming that devops scripts has been installed by aforementioned tool, the ansible deliverables are installed under `<install-dir>/furms-devops-tooling` directory,
 Create the `<install-dir>/inventory` file along with secrets in `<install-dir>/group_vars/all.yml` configuration file. 
 and now you can run ansible scripts e.g. to install FURMS:
 ```
 cd <install-dir>
-ansible-playbook -i inventory ansible/install-stack.yml 
+ansible-playbook -i inventory furms-devops-tooling/install-stack.yml 
 ```

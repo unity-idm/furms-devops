@@ -34,7 +34,7 @@ class Env:
     __DEVOPS_REPO_PATH = os.path.dirname(__PKG_TOOL_DIR_PATH)
 
     TARGET_DIR_PATH = os.path.join(__DEVOPS_REPO_PATH, "target")
-    ANSIBLE_DIR_PATH = os.path.join(__DEVOPS_REPO_PATH, 'ansible')
+    ANSIBLE_DIR_PATH = os.path.join(__DEVOPS_REPO_PATH, 'furms-devops-tooling')
     INSTALL_TOOLING = os.path.join(__DEVOPS_REPO_PATH, 'install-tooling')
 
 def parse_arguments():
@@ -54,8 +54,8 @@ def make_tarfile(output_filename, source_dir):
         tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def create_ansible_deliverable(version):
-    tar_ball = os.path.join(Env.TARGET_DIR_PATH, "ansible-%s.tar.gz" % version)
-    ansible_content = os.path.join(Env.TARGET_DIR_PATH, "ansible-%s" % version)
+    tar_ball = os.path.join(Env.TARGET_DIR_PATH, "furms-devops-tooling-%s.tar.gz" % version)
+    ansible_content = os.path.join(Env.TARGET_DIR_PATH, "furms-devops-tooling-%s" % version)
     remove_directory(ansible_content)
     shutil.copytree(Env.ANSIBLE_DIR_PATH, ansible_content)
     make_tarfile(tar_ball, ansible_content)
