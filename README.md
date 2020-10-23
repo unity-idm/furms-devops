@@ -27,6 +27,7 @@ Assuming the script is available under `https://some_site_.io/0.0.1/install-furm
 package installation in current directory, or
 
 * Download the script and run from command line to access some additional parameters:
+
 ```
 usage: install-furms-devops-tooling.py [--install-dir path] [--version]
 
