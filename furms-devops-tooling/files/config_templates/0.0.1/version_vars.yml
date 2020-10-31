@@ -1,7 +1,2 @@
 unityVersion: 3.3.3
-unityDistFile: unity-server-distribution-{{unityVersion}}-dist.tar.gz
-unityDownloadURL: https://master.dl.sourceforge.net/project/unity-idm/Unity%20server/{{unityVersion}}/{{unityDistFile}}
-
-furmsServiceVersion: 1.0.0-SNAPSHOT
-furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
-furmsServiceDownloadURL: http://localhost:8000/{{furmsDistFile}}
+furmsServiceVersion: 0.0.1-test3

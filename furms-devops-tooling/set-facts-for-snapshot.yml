@@ -1,0 +1,19 @@
+---
+  - set_fact:
+      snapshotURL: https://oss.sonatype.org/content/repositories/snapshots/io/imunity/furms/furms-server/{{furmsServiceVersion}}
+  - set_fact:
+      metadataURL: "{{snapshotURL}}/maven-metadata.xml"
+  - name: Get metadata
+    xml:
+      xmlstring: "{{ lookup('url', metadataURL, split_lines=False) }}"
+      content: text
+      xpath: "/metadata/versioning/snapshotVersions/snapshotVersion[extension='tar.gz']/value"
+    register: latestSnapshotVersionXml
+  - set_fact:
+      latestSnapshotVersion: "{{latestSnapshotVersionXml.matches[0].value}}"
+  - set_fact:
+      furmsDistFile: furms-server-{{latestSnapshotVersion}}-dist.tar.gz
+  - set_fact:
+      downloadURL: "{{snapshotURL}}/{{furmsDistFile}}"
+      distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
+

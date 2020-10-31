@@ -1,8 +1,25 @@
 ---
+- name: Check type of deployment
+  hosts: furms_server
+  tasks:
+  - include_vars:
+      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+  - set_fact: 
+      isSnapshot: "{{furmsServiceVersion.endswith('SNAPSHOT')}}"
+
 - name: Setup FURMS service
   gather_facts: no
   hosts: furms_server
   tasks:
+  - import_tasks: set-facts-for-snapshot.yml
+    when: isSnapshot
+
+  - set_fact:
+      furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
+      downloadURL: https://repo1.maven.org/maven2/io/imunity/furms/furms-server/{{furmsServiceVersion}}/{{furmsDistFile}}
+      distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
+    when: not isSnapshot
+
   - import_tasks: setup-server.yml
 
-
+  

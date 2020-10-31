@@ -2,6 +2,10 @@
 - name: Unity-IdM installation
   gather_facts: no
   hosts: unity
+  vars:
+    unityDistFile: unity-server-distribution-{{unityVersion}}-dist.tar.gz
+    downloadURL: https://sourceforge.net/projects/unity-idm/files/Unity%20server/{{unityVersion}}/{{unityDistFile}}/download
+    distributionFile: "{{workspaceAppDir}}/{{unityDistFile}}"
   tasks:
   - import_tasks: setup-server.yml
 
