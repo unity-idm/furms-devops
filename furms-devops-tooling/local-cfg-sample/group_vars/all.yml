@@ -5,6 +5,8 @@ furmsVersion: 0.0.1
 unity:
   host: localhost
   port: 2443
+  initialAdminUsername: admin
+  initialAdminPassword: -- set -- me --
 
 furmsServer:
   host: localhost
