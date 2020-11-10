@@ -7,6 +7,8 @@ See LICENSE file for licensing information.
 import sys, argparse, os
 import urllib.request, tarfile, requests
 
+ansible_dir_link = "furms-devops-tooling"
+
 class GitHubAsset:
    def __init__(self, asset_download_url, asset_name):
       self._download_url = asset_download_url
@@ -45,10 +47,9 @@ def create_link(unpacked_target_dir, copressed_dir_name):
    pwd = os.getcwd()
    os.chdir(unpacked_target_dir)
 
-   ansible_link = "furms-devops-tooling"
-   if os.path.exists(ansible_link):
-      os.unlink(ansible_link)
-   os.symlink(copressed_dir_name, ansible_link)
+   if os.path.exists(ansible_dir_link):
+      os.unlink(ansible_dir_link)
+   os.symlink(copressed_dir_name, ansible_dir_link)
 
    os.chdir(pwd)
 
@@ -66,12 +67,24 @@ def install_package(install_dir, asset):
    create_link(unpacked_target_dir, asset.copressed_dir_name())
    os.remove(compressed_target_file)
 
+def current_version_upto_date(asset):
+   if os.path.exists(ansible_dir_link):
+      current_ansible_dir = os.readlink(ansible_dir_link)
+      if current_ansible_dir == asset.copressed_dir_name():
+         return True
+   return False
+
 def main():
    args = parse_arguments()
 
    asset = GitHubClient().asset()
+
    if args.version:
-      print(asset.name())
+      print(asset.copressed_dir_name())
+      exit(0)
+
+   if current_version_upto_date(asset):
+      print("Current version %s is up to date." % asset.copressed_dir_name())
       exit(0)
 
    if args.install_dir:
