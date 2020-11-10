@@ -5,16 +5,26 @@ See LICENSE file for licensing information.
 '''
 
 import sys, argparse, os
-import urllib.request, tarfile
+import urllib.request, tarfile, requests
 
-__version__ = "__set_me__"
+class GitHubAsset:
+   def __init__(self, asset_download_url, asset_name):
+      self._download_url = asset_download_url
+      self._name = asset_name
 
-class Env:
-   __PACKAGE_HOST = "http://localhost:8000"
+   def name(self):
+      return self._name
+   def download_url(self):
+      return self._download_url
+   def copressed_dir_name(self):
+      return self._name.replace('.tar.gz' ,'')
 
-   PACKAGED_ANSIBLE_DIR_NAME = "furms-devops-tooling-%s" % __version__
-   PACKAGE_NAME = "%s.tar.gz" % PACKAGED_ANSIBLE_DIR_NAME
-   PACKAGE_URL = "%s/%s" % (__PACKAGE_HOST, PACKAGE_NAME)
+class GitHubClient:
+   def __init__(self):
+      resp = requests.get("https://api.github.com/repos/unity-idm/furms-devops/releases/latest")
+      self._asset = resp.json()["assets"][0]
+   def asset(self):
+      return GitHubAsset(self._asset["browser_download_url"], self._asset["name"])
 
 def parse_arguments():
    parser = argparse.ArgumentParser(description='FURMS devops tools installation utility.')
@@ -24,48 +34,48 @@ def parse_arguments():
       action='store_true')
    return parser.parse_args()
 
-def download_package(target_file):
-   urllib.request.urlretrieve(Env.PACKAGE_URL, target_file)
+def download_package(download_url, target_file):
+   urllib.request.urlretrieve(download_url, target_file)
 
 def unpack_archive(archive_file, unpacked_target_dir):
    tar = tarfile.open(archive_file, "r:gz")
    tar.extractall(unpacked_target_dir)
 
-def create_link(unpacked_target_dir):
+def create_link(unpacked_target_dir, copressed_dir_name):
    pwd = os.getcwd()
    os.chdir(unpacked_target_dir)
 
    ansible_link = "furms-devops-tooling"
-   ansible_dir = Env.PACKAGED_ANSIBLE_DIR_NAME
    if os.path.exists(ansible_link):
       os.unlink(ansible_link)
-   os.symlink(ansible_dir, ansible_link)
+   os.symlink(copressed_dir_name, ansible_link)
 
    os.chdir(pwd)
 
 
-def install_package(install_dir):
-   print("Installation of FURMS devops tools v%s into %s" % (__version__, install_dir))
+def install_package(install_dir, asset):
+   print("Installation of latest FURMS devops tools into %s" % (install_dir))
    os.makedirs(install_dir, exist_ok=True)
 
-   compressed_target_file = os.path.join(install_dir, Env.PACKAGE_NAME)
-   download_package(compressed_target_file)
+   compressed_target_file = os.path.join(install_dir, asset.name())
+   download_package(asset.download_url(), compressed_target_file)
 
-   unpacked_target_dir = target_dir = os.path.dirname(os.path.abspath(compressed_target_file))
+   unpacked_target_dir = os.path.dirname(os.path.abspath(compressed_target_file))
    unpack_archive(compressed_target_file, unpacked_target_dir)
 
-   create_link(unpacked_target_dir)
+   create_link(unpacked_target_dir, asset.copressed_dir_name())
    os.remove(compressed_target_file)
 
 def main():
    args = parse_arguments()
 
+   asset = GitHubClient().asset()
    if args.version:
-      print(__version__)
+      print(asset.name())
       exit(0)
 
    if args.install_dir:
-      install_package(args.install_dir)
+      install_package(args.install_dir, asset)
 
    print("Command finished successfully")
 

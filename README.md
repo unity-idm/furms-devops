@@ -16,14 +16,12 @@ Removes the `target` directory.
 
 
 ## `install-tooling/install_furms_devops_tooling.py`
-FURMS devops tools installation utility. This utility is a part of a devops package, and its responsibility is to install
-devops tools on a target machine. The script is prepared for a specific version, so whenever executed, it downloads packages
-with fixed version and creates the necessary directory structure.
+FURMS devops tools installation utility. Its responsibility is to install the latest released FURMS devops tooling.
 
 ### Installation
-Assuming the script is available under `https://some_site_.io/0.0.1/install_furms_devops_tooling.py`, it can be used in one of the following ways:
+The tool is available on github: [here](https://raw.githubusercontent.com/unity-idm/furms-devops/main/install-tooling/install_furms_devops_tooling.py) and can be used in one of the following ways:
 
-* Directly using the url like `curl -sSL https://some_site_.io/0.0.1/install_furms_devops_tooling.py | python`, which will result in
+* Directly using the url like `curl -L https://raw.githubusercontent.com/unity-idm/furms-devops/main/install-tooling/install_furms_devops_tooling.py | python`, which will result in
 package installation in current directory, or
 
 * Download the script and run from command line to access some additional parameters:
@@ -39,10 +37,21 @@ optional arguments:
 ```
 
 # Workflow
-Assuming that devops scripts has been installed by aforementioned tool, the ansible deliverables are installed under `<install-dir>/furms-devops-tooling` directory,
+Assuming that devops tooling has been installed by aforementioned tool, the ansible deliverables are installed under `<install-dir>/furms-devops-tooling` directory,
 Create the `<install-dir>/inventory` file along with secrets in `<install-dir>/group_vars/all.yml` configuration file. 
 and now you can run ansible scripts e.g. to install FURMS:
 ```
 cd <install-dir>
 ansible-playbook -i inventory furms-devops-tooling/install-stack.yml 
+```
+
+
+# Apendix
+## Preconfiure ansible managment host
+```
+pip3 install --upgrade --user ansible requests
+```
+Depending upon OS you are running, there might be a need to run the following as well:
+```
+/usr/libexec/platform-python -m pip install lxml
 ```
