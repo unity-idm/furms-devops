@@ -7,6 +7,7 @@ unity:
   port: 2443
   initialAdminUsername: admin
   initialAdminPassword: -- set -- me --
+  advertisedHost:       -- set -- me --
 
 furmsServer:
   host: localhost
