@@ -5,12 +5,39 @@
   - name: Include version vars
     include_vars:
       file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
-  - name: install configs
-    template:
-      src: "{{item.src}}"
-      dest: "{{serviceRuntimeAppDir}}/{{item.path}}"
+
+  - name: create directories
+    file:
+      state: directory
+      path: "{{serviceRuntimeAppDir}}/{{item.path}}"
+      mode: '0750'
+    with_filetree:
+      - "files/config_templates/{{furmsVersion}}/{{serviceDir}}/"
+    when: item.state == 'directory'
+
+  - name: check files
+    stat:
+      path: "{{item.src}}"
     with_filetree:
       - "files/config_templates/{{furmsVersion}}/{{serviceDir}}/"
     when: item.state == 'file'
+    register: files_stats
 
-      
+  - name: install and filtered configs
+    template:
+      src: "{{item.item.src}}"
+      dest: "{{serviceRuntimeAppDir}}/{{item.item.path}}"
+    with_items: "{{ files_stats.results }}"
+    when: 
+      - "'stat' in item"
+      - item.stat.charset != 'binary'
+      - not item.stat.path.endswith('.pem')
+
+  - name: install configs
+    copy:
+      src: "{{item.item.src}}"
+      dest: "{{serviceRuntimeAppDir}}/{{item.item.path}}"
+    with_items: "{{ files_stats.results }}"
+    when:
+      - "'stat' in item"
+      - item.stat.charset == 'binary' or item.stat.path.endswith('.pem')

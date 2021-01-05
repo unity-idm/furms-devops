@@ -1,14 +1,34 @@
-
 installDir: "{{playbook_dir}}/workspace/ansible-test"
 furmsVersion: 0.0.1
 
 unity:
   host: localhost
   port: 2443
-  initialAdminUsername: admin
-  initialAdminPassword: -- set -- me --
-  advertisedHost:       -- set -- me --
+  advertisedHost:        -- set -- me --
+  initialAdminUsername:  -- set -- me --
+  initialAdminPassword:  -- set -- me --
+
+  apiClient:
+    username:            -- set -- me --
+    password:            -- set -- me --
+
+  pki:
+    truststoresPassword: -- set -- me --
+    credentialsPassword: -- set -- me --
+
+  cIdP:
+    clientId:            -- set -- me --
+    clientSecret:        -- set -- me --
+    discoveryEndpoint:   -- set -- me --
+
+  oauthClient:
+    username:            -- set -- me --
+    password:            -- set -- me --
 
 furmsServer:
   host: localhost
   port: 3443
+  advertisedHost:        -- set -- me --
+  pki:
+    truststoresPassword: -- set -- me --
+    credentialsPassword: -- set -- me --
