@@ -1,6 +1,7 @@
 import com.google.common.collect.Lists
 import groovy.transform.Field
 import org.apache.commons.io.FilenameUtils
+import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import pl.edu.icm.unity.engine.api.config.UnityServerConfiguration
 import pl.edu.icm.unity.exceptions.EngineException
@@ -16,8 +17,17 @@ import pl.edu.icm.unity.types.basic.*
 
 @Field final String NAME_ATTR = "name"
 @Field final String EMAIL_ATTR = "email"
-@Field final String MOBILE_ATTR = "mobile"
-@Field final String COMMON_ATTR_FILE = "common"
+@Field final String COMMON_ATTR_FILE = "furmsAttributes"
+
+@Field final String ALLOWED_RETURN_URI_1 = "https://{{unity.advertisedHost}}/unitygw/oauth2ResponseConsumer"
+@Field final String ALLOWED_RETURN_URI_2 = "https://{{furmsServer.advertisedHost}}/login/oauth2/code/unity"
+
+@Field final String FURMS_API_USERNAME = "{{unity.apiClient.username}}"
+@Field final String FURMS_API_PASSWORD = "{{unity.apiClient.password}}"
+
+@Field final String FURMS_OAUTH_USERNAME = "{{unity.oauthClient.username}}"
+@Field final String FURMS_OAUTH_PASSWORD = "{{unity.oauthClient.password}}"
+
 
 //run only if it is the first start of the server on clean DB.
 if (!isColdStart)
@@ -29,14 +39,11 @@ try
 {
 	initCommonAttrTypesFromResource()
 	initDefaultAuthzPolicy()
-	initCommonAttrTypes()
-	initAuthAttrTypes()
-	assignNameAttributeAndUserPasswordToAdminAccount()
-	initAPIClient()
 	initBaseGroups()
-	initRoleAttributeType()
+	setupAdminUser()
 	initOAuthClient()
 	initTestUsers()
+	initFurmsRestClient()
 
 } catch (Exception e)
 {
@@ -48,50 +55,45 @@ void initCommonAttrTypesFromResource() throws EngineException
 {
 	List<Resource> resources = attributeTypeSupport.getAttibuteTypeResourcesFromClasspathDir()
 	for (Resource r : resources)
-		if (FilenameUtils.getBaseName(r.getFilename()).equals(COMMON_ATTR_FILE))
-		{
-			List<AttributeType> attrTypes = attributeTypeSupport
-					.loadAttributeTypesFromResource(r)
-			for (AttributeType type : attrTypes)
-				attributeTypeManagement.addAttributeType(type)
-			log.info("Common attributes added from resource file: " + r.getFilename())
-		}
+		loadAttrsFromFile(r)
+		
+	Resource furmsAttributes = new FileSystemResource("conf/attributeTypes/" + COMMON_ATTR_FILE + ".json");
+	if (furmsAttributes.exists())
+		loadAttrsFromFile(furmsAttributes)
+	
 	log.info("Provisioned FURMS attribute types from resource")
 }
 
-void initAuthAttrTypes() throws EngineException
+void loadAttrsFromFile(Resource r)
 {
-	def furmsSiteRole = new AttributeType("furmsSiteRole", EnumAttributeSyntax.ID, msgSrc)
-	furmsSiteRole.setValueSyntaxConfiguration(new EnumAttributeSyntax("ADMIN", "SUPPORT")
-			.getSerializedConfiguration())
-
-	def furmsFenixRole = new AttributeType("furmsFenixRole", EnumAttributeSyntax.ID, msgSrc)
-	furmsFenixRole.setValueSyntaxConfiguration(new EnumAttributeSyntax("ADMIN")
-			.getSerializedConfiguration())
-
-	def furmsCommunityRole = new AttributeType("furmsCommunityRole", EnumAttributeSyntax.ID, msgSrc)
-	furmsCommunityRole.setValueSyntaxConfiguration(new EnumAttributeSyntax("ADMIN")
-			.getSerializedConfiguration())
-
-	def furmsProjectRole = new AttributeType("furmsProjectRole", EnumAttributeSyntax.ID, msgSrc)
-	furmsProjectRole.setValueSyntaxConfiguration(new EnumAttributeSyntax("ADMIN", "MEMBER")
-			.getSerializedConfiguration())
-
-	[furmsSiteRole, furmsFenixRole, furmsCommunityRole, furmsProjectRole]
-			.each{attributeTypeManagement.addAttributeType(it)}
-
-	log.info("Provisioned default FURMS roles attributes types")
+	if (FilenameUtils.getBaseName(r.getFilename()).equals(COMMON_ATTR_FILE))
+	{
+		List<AttributeType> attrTypes = attributeTypeSupport.loadAttributeTypesFromResource(r)
+		for (AttributeType type : attrTypes)
+		{
+			attributeTypeManagement.addAttributeType(type)
+			log.info("Addin attribute type: " + type)
+    	}
+	}
+	log.info("Common attributes added from resource file: " + r.getFilename())
 }
 
-void initTestUsers()
+void initFurmsRestClient()
 {
-	IdentityParam toAdd = new IdentityParam(UsernameIdentity.ID, "furms-site-demo-user")
+	IdentityParam toAdd = new IdentityParam(UsernameIdentity.ID, FURMS_API_USERNAME)
 	Identity base = entityManagement.addEntity(toAdd, EntityState.valid)
 	EntityParam entity = new EntityParam(base.getEntityId())
-	PasswordToken pToken = new PasswordToken("a")
-	entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
 
-	log.info("Provisioned test FURMS users")
+	Attribute role = EnumAttribute.of("sys:AuthorizationRole", "/", "Contents Manager")
+	attributesManagement.createAttribute(entity, role)
+
+	Attribute name = StringAttribute.of(NAME_ATTR, "/", "FURMS client user")
+	attributesManagement.createAttribute(entity, name)
+
+	PasswordToken clientPassword = new PasswordToken(FURMS_API_PASSWORD)
+	entityCredentialManagement.setEntityCredential(entity, "clientPassword", clientPassword.toJson())
+
+	log.info("Provisioned FURMS client users")
 }
 
 void initDefaultAuthzPolicy() throws EngineException
@@ -108,86 +110,45 @@ void initDefaultAuthzPolicy() throws EngineException
 }
 
 
-void initCommonAttrTypes() throws EngineException
+void setupAdminUser() throws EngineException
 {
-	//here we create couple of useful attribute types, paying attention not to
-	// create those which are already defined. This check shouldn't be necessary
-	// when coldStart check is done, it is relevant only if this check is turned off.
-
-	Map<String, AttributeType> existingATs = attributeTypeManagement.getAttributeTypesAsMap()
-
-	//The name attribute will be marked as special attribute providing owner's displayed name.
-	AttributeType name = new AttributeType(NAME_ATTR, StringAttributeSyntax.ID, msgSrc)
-	name.setMinElements(1)
-	StringAttributeSyntax nameSyntax = new StringAttributeSyntax()
-	nameSyntax.setMaxLength(100)
-	nameSyntax.setMinLength(2)
-	name.setValueSyntaxConfiguration(nameSyntax.getSerializedConfiguration())
-	name.getMetadata().put(EntityNameMetadataProvider.NAME, "")
-	name.setGlobal(true)
-	if (!existingATs.containsKey(NAME_ATTR))
-		attributeTypeManagement.addAttributeType(name)
-
-	//The email attribute will be marked as special attribute providing owner's contact e-mail.
-	AttributeType verifiableEmail = new AttributeType(EMAIL_ATTR,
-			VerifiableEmailAttributeSyntax.ID, msgSrc)
-	verifiableEmail.setMinElements(1)
-	verifiableEmail.setMaxElements(5)
-	verifiableEmail.getMetadata().put(ContactEmailMetadataProvider.NAME, "")
-	if (!existingATs.containsKey(EMAIL_ATTR))
-		attributeTypeManagement.addAttributeType(verifiableEmail)
-
-	//The mobile attribute will be marked as special attribute providing owner's contact mobile.
-	AttributeType verifiableMobile = new AttributeType(MOBILE_ATTR,
-			VerifiableMobileNumberAttributeSyntax.ID, msgSrc)
-	verifiableMobile.setMinElements(1)
-	verifiableMobile.setMaxElements(5)
-	verifiableMobile.getMetadata().put(ContactMobileMetadataProvider.NAME, "")
-	if (!existingATs.containsKey(MOBILE_ATTR))
-		attributeTypeManagement.addAttributeType(verifiableMobile)
-	log.info("Provisioned common(name, email, mobile) attribute types")
-}
-
-void assignNameAttributeAndUserPasswordToAdminAccount() throws EngineException
-{
-	//admin user has no "name" and password - let's assign one.
 	String adminU = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_USER)
-	String adminP = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_PASSWORD)
-	if (adminU == null) return
-	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Default Administrator")
 	EntityParam entity = new EntityParam(new IdentityTaV(UsernameIdentity.ID, adminU))
-	try
-	{
-		if (attributesManagement.getAttributes(entity, "/", NAME_ATTR).isEmpty())
-		{
-			attributesManagement.createAttribute(entity, nameA)
-			PasswordToken pToken = new PasswordToken(adminP)
-			entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
-		}
-	} catch (IllegalIdentityValueException e)
-	{
-		//ok - no default admin, no default Name.
-	}
-	log.info("Assigned name attribute and user password to admin account")
+	
+	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Default Administrator")
+	attributesManagement.createAttribute(entity, nameA)
+	
+	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "admin@domain.com")
+	attributesManagement.createAttribute(entity, emailA)
+	
+	String adminP = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_PASSWORD)
+	PasswordToken pToken = new PasswordToken(adminP)
+	entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
+	
+	groupsManagement.addMemberFromParent("/fenix", entity);
+	groupsManagement.addMemberFromParent("/fenix/users", entity);
+	
+	Attribute furmsFenixRole = EnumAttribute.of("furmsFenixRole", "/fenix/users", "ADMIN");
+	attributesManagement.setAttribute(entity, furmsFenixRole, false);
 }
 
-
-void initAPIClient() throws EngineException
+void initTestUsers()
 {
-	String adminU = "{{unity.apiClient.username}}"
-	String adminP = "{{unity.apiClient.password}}"
+	IdentityParam toAdd = new IdentityParam(UsernameIdentity.ID, "furms-site-demo-user")
+	Identity base = entityManagement.addEntity(toAdd, EntityState.valid)
+	EntityParam entity = new EntityParam(base.getEntityId())
+	
+	String passwd = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_PASSWORD);
+	PasswordToken pToken = new PasswordToken(passwd)
+	entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
 
-	IdentityParam apiClient = new IdentityParam(UsernameIdentity.ID, adminU)
-	Identity apiClientIdentity = entityManagement.addEntity(apiClient, EntityState.valid)
-
-	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "API Client")
-	EntityParam entity = new EntityParam(apiClientIdentity.getEntityId())
-
+	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Test user")
 	attributesManagement.createAttribute(entity, nameA)
-	PasswordToken clientPassword = new PasswordToken(adminP)
-	entityCredentialManagement.setEntityCredential(entity, "clientPassword", clientPassword.toJson())
-
-	log.info("Initialized all data required for API clients")
+	
+	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "test-user@domain.com")
+	attributesManagement.createAttribute(entity, emailA)
+	
+	log.info("Provisioned test FURMS users")
 }
 
 void initBaseGroups()
@@ -199,24 +160,17 @@ void initBaseGroups()
 	log.info("Provisioned base Furms groups")
 }
 
-void initRoleAttributeType()
-{
-	AttributeType role = new AttributeType("role", "string")
-	role.setMinElements(1)
-	attributeTypeManagement.addAttributeType(role)
-	log.info("Provisioned role attribute type")
-}
-
 void initOAuthClient()
 {
 	groupsManagement.addGroup(new Group("/oauth-clients"))
-	IdentityParam oauthClient = new IdentityParam(UsernameIdentity.ID, "{{unity.oauthClient.username}}")
-	Identity oauthClientA = entityManagement.addEntity(oauthClient, EntityState.valid)
-	PasswordToken pToken2 = new PasswordToken("{{unity.oauthClient.password}}")
+	IdentityParam oauthClient = new IdentityParam(UsernameIdentity.ID, FURMS_OAUTH_USERNAME)
+	Identity oauthClientA = entityManagement.addEntity(oauthClient,
+			EntityState.valid)
+	PasswordToken pToken2 = new PasswordToken(FURMS_OAUTH_PASSWORD)
 
 	EntityParam entityP = new EntityParam(oauthClientA.getEntityId())
 	entityCredentialManagement.setEntityCredential(entityP, "userPassword", pToken2.toJson())
-	log.warn("Furms OAuth client user was created with default password.")
+	log.warn("Furms OAuth client user was created with default password.  Please change it! U: oauth-client P: oauth-pass1")
 
 	Attribute cnA = StringAttribute.of(NAME_ATTR, "/", "OAuth client")
 	attributesManagement.createAttribute(entityP, cnA)
@@ -230,9 +184,10 @@ void initOAuthClient()
 	attributesManagement.createAttribute(entityP, flowsA)
 	Attribute returnUrlA = StringAttribute.of(OAuthSystemAttributesProvider.ALLOWED_RETURN_URI,
 			"/oauth-clients",
-			"https://{{unity.advertisedHost}}/unitygw/oauth2ResponseConsumer",
-			"https://{{furmsServer.advertisedHost}}/login/oauth2/code/unity"
+			ALLOWED_RETURN_URI_1,
+			ALLOWED_RETURN_URI_2
 	)
 	attributesManagement.createAttribute(entityP, returnUrlA)
 	log.info("Initialized all data required for oAuth2 client")
 }
+

@@ -21,7 +21,14 @@ furms:
          clientId: {{unity.oauthClient.username}}
          clientSecret: {{unity.oauthClient.password}}
    url: https://{{furmsServer.advertisedHost}}
+
    language: en
+   front:
+      language: en
+      accepted-img-files:
+         - image/jpeg
+         - image/png
+         - image/gif
 
 spring:
    datasource:
