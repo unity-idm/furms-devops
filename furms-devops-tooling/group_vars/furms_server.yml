@@ -9,3 +9,11 @@ serviceStartCmd: "{{serviceCmd}} start"
 serviceStopCmd: "{{serviceCmd}} stop"
 serviceURL: "https://{{furmsServer.host}}:{{furmsServer.port}}"
 healthCheckPath: "/public/app-health"
+
+certsDestinationDir: "{{serviceRuntimeAppDir}}"
+keystoreSource: "{{furmsServer.pki.keyStore.file}}"
+keystoreTargetFileName: "keystore.{{furmsServer.pki.keyStore.type}}"
+
+truststoreSource: "{{furmsServer.pki.trustStore.file}}"
+
+

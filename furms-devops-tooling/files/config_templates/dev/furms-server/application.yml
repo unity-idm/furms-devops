@@ -1,9 +1,10 @@
 server:
    port: {{furmsServer.port}}
    ssl:
-      key-store: ./keystore.p12
-      key-store-type: PKCS12
-      key-store-password: {{furmsServer.pki.credentialsPassword}}
+      key-store-type: {{furmsServer.pki.keyStore.type}}
+      key-store-password: {{furmsServer.pki.keyStore.password}}
+      key-alias: {{furmsServer.pki.keyStore.keyAlias}}
+      key-store: ./{{keystoreTargetFileName}}
       key-password: ${server.ssl.key-store-password}
       enabled-protocols: TLSv1.2
 
@@ -11,8 +12,8 @@ furms:
    unity:
       url: https://{{unity.advertisedHost}}
       ssl:
-         trust-store: file:./demoTruststore.jks
-         trust-store-password: {{furmsServer.pki.truststoresPassword}}
+         trust-store: file:./{{truststoreTargetFileName}}
+         trust-store-password: {{furmsServer.pki.trustStore.password}}
 
       admin-url: https://{{unity.host}}:{{unity.port}}/rest-admin/v1
       admin-user: {{unity.apiClient.username}}

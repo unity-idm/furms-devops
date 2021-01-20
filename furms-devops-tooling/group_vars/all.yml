@@ -2,4 +2,6 @@ currentAppDir: "{{installDir}}/{{installTimestamp}}"
 workspaceAppDir: "{{installDir}}/workspace"
 runtimeAppDir: "{{installDir}}/current"
 
+truststoreTargetFileName: truststore.jks
+
 

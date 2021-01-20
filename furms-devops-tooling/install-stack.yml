@@ -26,3 +26,5 @@
     installTimestamp: "{{hostvars['localhost']['installTimestamp']}}"
 
 - import_playbook: setup-configs.yml
+
+- import_playbook: setup-certs.yml

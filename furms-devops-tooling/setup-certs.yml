@@ -1,0 +1,23 @@
+---
+- name: Install certificates to servers
+  hosts: all_servers
+  tasks:
+  - name: Include version vars
+    include_vars:
+      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+
+  - name: create certs directory
+    file:
+      state: directory
+      path: "{{certsDestinationDir}}"
+      mode: '0750'
+
+  - name: install keystore
+    copy:
+      src: "{{keystoreSource}}"
+      dest: "{{certsDestinationDir}}/{{keystoreTargetFileName}}"
+
+  - name: install truststore
+    copy:
+      src: "{{truststoreSource}}"
+      dest: "{{certsDestinationDir}}/{{truststoreTargetFileName}}"
