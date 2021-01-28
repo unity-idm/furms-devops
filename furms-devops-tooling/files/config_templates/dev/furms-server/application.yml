@@ -23,20 +23,15 @@ furms:
          clientSecret: {{unity.oauthClient.password}}
    url: https://{{furmsServer.advertisedHost}}
 
-   language: en
    front:
       language: en
-      accepted-img-files:
-         - image/jpeg
-         - image/png
-         - image/gif
 
 spring:
    datasource:
-      url: jdbc:h2:file:./db/furms;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_UPPER=TRUE;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password: sa
-      driver-class-name: org.h2.Driver
+      url: jdbc:postgresql://{{furmsServer.storage.url}}/{{furmsServer.storage.dbName}}
+      username: {{furmsServer.storage.username}}
+      password: {{furmsServer.storage.password}}
+      driver-class-name: org.postgresql.Driver
 
 logging:
     config: ./logback.xml

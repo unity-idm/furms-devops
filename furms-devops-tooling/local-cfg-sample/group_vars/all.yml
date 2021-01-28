@@ -23,6 +23,12 @@ unity:
       file:              -- set -- me --
       password:          -- set -- me --
 
+  storage:
+    url:                 -- set -- me --
+    dbName:              -- set -- me --
+    username:            -- set -- me --
+    password:            -- set -- me --
+
   cIdP:
     clientId:            -- set -- me --
     clientSecret:        -- set -- me --
@@ -46,3 +52,9 @@ furmsServer:
     trustStore:
       file:              -- set -- me --
       password:          -- set -- me --
+
+  storage:
+    url:                 -- set -- me --
+    dbName:              -- set -- me --
+    username:            -- set -- me --
+    password:            -- set -- me --
