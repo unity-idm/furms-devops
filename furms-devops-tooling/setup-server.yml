@@ -2,18 +2,9 @@
 - name: Include version vars
   include_vars:
     file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
-- name: Check if distribution downloaded
-  stat:
-    path: "{{distributionFile}}"
-  register: distributionFileStatResult
-- name: Download distribution
-  when: distributionFileStatResult.stat.exists == false
-  command: 
-    cmd: curl -L {{downloadURL}} --output {{distributionFile}} --silent
-    warn: false
-- file:
-      path: "{{distributionFile}}"
-      mode: '0644'
+
+- import_tasks: setup-server-download.yml
+
 - name: create folder for current installation
   file:
     state: directory

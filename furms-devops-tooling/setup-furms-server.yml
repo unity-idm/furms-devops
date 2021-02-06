@@ -7,19 +7,18 @@
   - set_fact: 
       isSnapshot: "{{furmsServiceVersion.endswith('SNAPSHOT')}}"
 
-- name: Setup FURMS service
+- name: Determine FURMS deliverables
   gather_facts: no
   hosts: furms_server
   tasks:
   - import_tasks: set-facts-for-snapshot.yml
     when: isSnapshot
 
-  - set_fact:
-      furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
-      downloadURL: https://repo1.maven.org/maven2/io/imunity/furms/furms-server/{{furmsServiceVersion}}/{{furmsDistFile}}
-      distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
+  - import_tasks: set-facts-for-release.yml
     when: not isSnapshot
 
   - import_tasks: setup-server.yml
+
+  - 
 
   

@@ -1,15 +1,16 @@
 [unity]
-local-unity		ansible_connection=local 
+local-unity             ansible_connection=local 
 
 
 [furms_server]
-local-furms-server		ansible_connection=local
+local-furms-server      ansible_connection=local
 
 
-#Do not edit below
-
+#######################################
+# Do not edit below's configuration
+#######################################
 [local_only]
-localhost		ansible_connection=local
+localhost               ansible_connection=local
 
 [all_servers:children]
 unity

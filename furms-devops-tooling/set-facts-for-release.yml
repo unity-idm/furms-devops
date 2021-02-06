@@ -1,0 +1,7 @@
+---
+  - set_fact:
+      furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
+      downloadURL: https://repo1.maven.org/maven2/io/imunity/furms/furms-server/{{furmsServiceVersion}}/{{furmsDistFile}}
+      distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
+
+

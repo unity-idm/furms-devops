@@ -1,0 +1,14 @@
+---
+- name: Check if distribution downloaded
+  stat:
+    path: "{{distributionFile}}"
+  register: distributionFileStatResult
+- name: Download distribution
+  when: distributionFileStatResult.stat.exists == false
+  command: 
+    cmd: curl -L {{downloadURL}} --output {{distributionFile}} --silent
+    warn: false
+- file:
+      path: "{{distributionFile}}"
+      mode: '0644'
+

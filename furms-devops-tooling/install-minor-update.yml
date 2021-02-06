@@ -1,0 +1,44 @@
+---
+
+# to skip master migration execute ansible with --extra-vars "skipMasterMigration=true"
+
+- name: Check type of deployment
+  hosts: furms_server
+  tasks:
+  - include_vars:
+      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+  - set_fact: 
+      isSnapshot: "{{furmsServiceVersion.endswith('SNAPSHOT')}}"
+
+- name: Determine FURMS deliverables
+  gather_facts: no
+  hosts: furms_server
+  vars:
+    - tmpDir: "{{workspaceAppDir}}/tmp"
+  tasks:
+  - import_tasks: set-facts-for-snapshot.yml
+    when: isSnapshot
+
+  - import_tasks: set-facts-for-release.yml
+    when: not isSnapshot
+
+  - import_tasks: setup-server-download.yml
+
+  - name: Rmove tmp directory
+    file:
+      state: absent
+      path: "{{tmpDir}}/"
+  - name: Create tmp directory
+    file:
+      state: directory
+      path: "{{tmpDir}}"
+      mode: '0750'
+  
+  - name: Extract distribution
+    unarchive:
+      src: "{{distributionFile}}"
+      dest: "{{tmpDir}}"
+      extra_opts: [--strip-components=1]
+
+
+
