@@ -17,6 +17,8 @@ import pl.edu.icm.unity.types.basic.*
 
 @Field final String NAME_ATTR = "name"
 @Field final String EMAIL_ATTR = "email"
+@Field final String FIRSTNAME_ATTR = "firstname"
+@Field final String SURNAME_ATTR = "surname"
 @Field final String COMMON_ATTR_FILE = "furmsAttributes"
 
 @Field final String ALLOWED_RETURN_URI_1 = "https://{{unity.advertisedHost}}/unitygw/oauth2ResponseConsumer"
@@ -42,7 +44,6 @@ try
 	initBaseGroups()
 	setupAdminUser()
 	initOAuthClient()
-	initTestUsers()
 	initFurmsRestClient()
 
 } catch (Exception e)
@@ -115,12 +116,18 @@ void setupAdminUser() throws EngineException
 	String adminU = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_USER)
 	EntityParam entity = new EntityParam(new IdentityTaV(UsernameIdentity.ID, adminU))
 	
-	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Default Administrator")
+	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Default FENIX Administrator")
 	attributesManagement.createAttribute(entity, nameA)
 	
 	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "admin@domain.com")
 	attributesManagement.createAttribute(entity, emailA)
-	
+
+	Attribute firstnameA = StringAttribute.of(FIRSTNAME_ATTR, "/", "Default")
+	attributesManagement.createAttribute(entity, firstnameA)
+
+	Attribute surnameA = StringAttribute.of(SURNAME_ATTR, "/", "FENIX Admin")
+	attributesManagement.createAttribute(entity, surnameA)
+
 	String adminP = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_PASSWORD)
 	PasswordToken pToken = new PasswordToken(adminP)
 	entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
@@ -130,25 +137,6 @@ void setupAdminUser() throws EngineException
 	
 	Attribute furmsFenixRole = EnumAttribute.of("furmsFenixRole", "/fenix/users", "ADMIN");
 	attributesManagement.setAttribute(entity, furmsFenixRole, false);
-}
-
-void initTestUsers()
-{
-	IdentityParam toAdd = new IdentityParam(UsernameIdentity.ID, "furms-site-demo-user")
-	Identity base = entityManagement.addEntity(toAdd, EntityState.valid)
-	EntityParam entity = new EntityParam(base.getEntityId())
-	
-	String passwd = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_PASSWORD);
-	PasswordToken pToken = new PasswordToken(passwd)
-	entityCredentialManagement.setEntityCredential(entity, "userPassword", pToken.toJson())
-
-	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Test user")
-	attributesManagement.createAttribute(entity, nameA)
-	
-	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "test-user@domain.com")
-	attributesManagement.createAttribute(entity, emailA)
-	
-	log.info("Provisioned test FURMS users")
 }
 
 void initBaseGroups()
