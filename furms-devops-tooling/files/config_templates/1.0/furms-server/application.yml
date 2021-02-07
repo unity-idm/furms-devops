@@ -1,0 +1,37 @@
+server:
+   port: {{furmsServer.port}}
+   ssl:
+      key-store-type: {{furmsServer.pki.keyStore.type}}
+      key-store-password: {{furmsServer.pki.keyStore.password}}
+      key-alias: {{furmsServer.pki.keyStore.keyAlias}}
+      key-store: ./{{keystoreTargetFileName}}
+      key-password: ${server.ssl.key-store-password}
+      enabled-protocols: TLSv1.2
+
+furms:
+   unity:
+      url: https://{{unity.advertisedHost}}
+      ssl:
+         trust-store: file:./{{truststoreTargetFileName}}
+         trust-store-password: {{furmsServer.pki.trustStore.password}}
+
+      admin-url: https://{{unity.host}}:{{unity.port}}/rest-admin/v1
+      admin-user: {{unity.apiClient.username}}
+      admin-password: {{unity.apiClient.password}}
+      oAuth:
+         clientId: {{unity.oauthClient.username}}
+         clientSecret: {{unity.oauthClient.password}}
+   url: https://{{furmsServer.advertisedHost}}
+
+   front:
+      language: en
+
+spring:
+   datasource:
+      url: jdbc:postgresql://{{furmsServer.storage.url}}/{{furmsServer.storage.dbName}}
+      username: {{furmsServer.storage.username}}
+      password: {{furmsServer.storage.password}}
+      driver-class-name: org.postgresql.Driver
+
+logging:
+    config: ./logback.xml
