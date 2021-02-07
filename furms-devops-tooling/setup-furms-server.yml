@@ -19,6 +19,21 @@
 
   - import_tasks: setup-server.yml
 
-  - 
+  - name: remove javadoc jar
+    file:
+      state: absent
+      path: "{{serviceCurrentAppDir}}/{{furmsDeliverableBaseName}}-javadoc.jar"
+
+  - name: remove sources jar
+    file:
+      state: absent
+      path: "{{serviceCurrentAppDir}}/{{furmsDeliverableBaseName}}-sources.jar"
+
+  - name: create symlink to FURMS service
+    file:
+      state: link
+      src: "{{furmsDeliverableJar}}"
+      dest: "{{serviceCurrentAppDir}}/{{serviceCmd}}"
+
 
   

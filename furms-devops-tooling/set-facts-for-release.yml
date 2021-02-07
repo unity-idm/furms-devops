@@ -1,6 +1,9 @@
 ---
+  - include_vars:
+      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
   - set_fact:
       furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
+  - set_fact:
       downloadURL: https://repo1.maven.org/maven2/io/imunity/furms/furms-server/{{furmsServiceVersion}}/{{furmsDistFile}}
       distributionFile: "{{workspaceAppDir}}/{{furmsDistFile}}"
 

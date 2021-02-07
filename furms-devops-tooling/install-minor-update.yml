@@ -1,6 +1,8 @@
 ---
 
-# to skip master migration execute ansible with --extra-vars "skipMasterMigration=true"
+#
+# to skip master migration execute ansible with --extra-vars "furmsServiceVersion=1.0.0-a2"
+#
 
 - name: Check type of deployment
   hosts: furms_server
@@ -40,5 +42,21 @@
       dest: "{{tmpDir}}"
       extra_opts: [--strip-components=1]
 
+  - name: Install update
+    copy:
+      src: "{{tmpDir}}/{{furmsDeliverableJar}}"
+      dest: "{{serviceRuntimeAppDir}}/{{furmsDeliverableJar}}"
+      mode: u=rwx,g=r,o=r
+
+  - name: remove old like
+    file: 
+      state: absent
+      path: "{{serviceRuntimeAppDir}}/{{serviceCmd}}"
+
+  - name: create symlink to FURMS service
+    file:
+      state: link
+      src: "{{furmsDeliverableJar}}"
+      dest: "{{serviceRuntimeAppDir}}/{{serviceCmd}}"
 
 
