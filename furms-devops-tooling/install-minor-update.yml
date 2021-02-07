@@ -1,7 +1,9 @@
 ---
 
 #
-# to skip master migration execute ansible with --extra-vars "furmsServiceVersion=1.0.0-a2"
+# Assuming 1.0.0-a2 version is expected to be installed, execute ansible with 
+# the following additional arguments:
+# --extra-vars "furmsServiceVersion=1.0.0-a2"
 #
 
 - name: Check type of deployment
