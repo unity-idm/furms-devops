@@ -58,3 +58,8 @@ furmsServer:
     dbName:              -- set -- me --
     username:            -- set -- me --
     password:            -- set -- me --
+
+  preSharedKeys:
+    cIdP:
+      username:          -- set -- me --
+      password:          -- set -- me --

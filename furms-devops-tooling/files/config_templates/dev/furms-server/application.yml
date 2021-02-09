@@ -22,7 +22,9 @@ furms:
          clientId: {{unity.oauthClient.username}}
          clientSecret: {{unity.oauthClient.password}}
    url: https://{{furmsServer.advertisedHost}}
-
+   psk:
+      centralIdPUser: {{furmsServer.preSharedKeys.cIdP.username}}
+      centralIdPSecret: {{furmsServer.preSharedKeys.cIdP.password}}
    front:
       language: en
 
