@@ -29,6 +29,8 @@ furms:
       language: en
 
 spring:
+   profiles:
+      active: demo-data-provisioning
    datasource:
       url: jdbc:postgresql://{{furmsServer.storage.url}}/{{furmsServer.storage.dbName}}
       username: {{furmsServer.storage.username}}
