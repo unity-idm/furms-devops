@@ -21,8 +21,7 @@ import pl.edu.icm.unity.types.basic.*
 @Field final String SURNAME_ATTR = "surname"
 @Field final String COMMON_ATTR_FILE = "furmsAttributes"
 
-@Field final String ALLOWED_RETURN_URI_1 = "https://{{unity.advertisedHost}}/unitygw/oauth2ResponseConsumer"
-@Field final String ALLOWED_RETURN_URI_2 = "https://{{furmsServer.advertisedHost}}/login/oauth2/code/unity"
+@Field final String ALLOWED_RETURN_URI_1 = "https://{{furmsServer.advertisedHost}}/login/oauth2/code/unity"
 
 @Field final String FURMS_API_USERNAME = "{{unityApiClientUsername}}"
 @Field final String FURMS_API_PASSWORD = "{{unityApiClientPassword}}"
@@ -172,8 +171,7 @@ void initOAuthClient()
 	attributesManagement.createAttribute(entityP, flowsA)
 	Attribute returnUrlA = StringAttribute.of(OAuthSystemAttributesProvider.ALLOWED_RETURN_URI,
 			"/oauth-clients",
-			ALLOWED_RETURN_URI_1,
-			ALLOWED_RETURN_URI_2
+			ALLOWED_RETURN_URI_1
 	)
 	attributesManagement.createAttribute(entityP, returnUrlA)
 	log.info("Initialized all data required for oAuth2 client")

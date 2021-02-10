@@ -7,7 +7,7 @@ local-furms-server      ansible_connection=local
 
 
 #######################################
-# Do not edit below's configuration
+# Do not edit below this line
 #######################################
 [local_only]
 localhost               ansible_connection=local

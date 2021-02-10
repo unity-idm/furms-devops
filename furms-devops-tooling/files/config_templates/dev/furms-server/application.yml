@@ -6,7 +6,7 @@ server:
       key-alias: {{furmsServer.pki.keyStore.keyAlias}}
       key-store: ./{{keystoreTargetFileName}}
       key-password: ${server.ssl.key-store-password}
-      enabled-protocols: TLSv1.2
+      enabled-protocols: TLSv1.2, TLSv1.3
 
 furms:
    unity:

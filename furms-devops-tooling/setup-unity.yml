@@ -8,4 +8,7 @@
     distributionFile: "{{workspaceAppDir}}/{{unityDistFile}}"
   tasks:
   - import_tasks: setup-server.yml
+  
+  - name: Backup distribution config 
+    command: mv "{{serviceInstallationDir}}/conf" "{{serviceInstallationDir}}/conf-orig"
 
