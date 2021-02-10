@@ -23,8 +23,8 @@ unity:
       file:              -- set -- me --
       password:          -- set -- me --
 
-  storage:
-    url:                 -- set -- me --
+  db:
+    host:                -- set -- me --
     dbName:              -- set -- me --
     username:            -- set -- me --
     password:            -- set -- me --
@@ -53,8 +53,8 @@ furmsServer:
       file:              -- set -- me --
       password:          -- set -- me --
 
-  storage:
-    url:                 -- set -- me --
+  db:
+    host:                -- set -- me --
     dbName:              -- set -- me --
     username:            -- set -- me --
     password:            -- set -- me --

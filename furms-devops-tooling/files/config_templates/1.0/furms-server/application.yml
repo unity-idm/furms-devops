@@ -30,9 +30,9 @@ furms:
 
 spring:
    datasource:
-      url: jdbc:postgresql://{{furmsServer.storage.url}}/{{furmsServer.storage.dbName}}
-      username: {{furmsServer.storage.username}}
-      password: {{furmsServer.storage.password}}
+      url: jdbc:postgresql://{{furmsServer.db.host}}/{{furmsServer.db.dbName}}
+      username: {{furmsServer.db.username}}
+      password: {{furmsServer.db.password}}
       driver-class-name: org.postgresql.Driver
 
 logging:
