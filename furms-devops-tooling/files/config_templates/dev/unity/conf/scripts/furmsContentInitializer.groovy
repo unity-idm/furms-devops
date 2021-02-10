@@ -24,11 +24,11 @@ import pl.edu.icm.unity.types.basic.*
 @Field final String ALLOWED_RETURN_URI_1 = "https://{{unity.advertisedHost}}/unitygw/oauth2ResponseConsumer"
 @Field final String ALLOWED_RETURN_URI_2 = "https://{{furmsServer.advertisedHost}}/login/oauth2/code/unity"
 
-@Field final String FURMS_API_USERNAME = "{{unity.apiClient.username}}"
-@Field final String FURMS_API_PASSWORD = "{{unity.apiClient.password}}"
+@Field final String FURMS_API_USERNAME = "{{unityApiClientUsername}}"
+@Field final String FURMS_API_PASSWORD = "{{unityApiClientPassword}}"
 
-@Field final String FURMS_OAUTH_USERNAME = "{{unity.oauthClient.username}}"
-@Field final String FURMS_OAUTH_PASSWORD = "{{unity.oauthClient.password}}"
+@Field final String FURMS_OAUTH_USERNAME = "{{unityOauthClientUsername}}"
+@Field final String FURMS_OAUTH_PASSWORD = "{{unityOauthClientPassword}}"
 
 
 //run only if it is the first start of the server on clean DB.
@@ -36,7 +36,8 @@ if (!isColdStart)
 {
 	log.info("Database already initialized with content, skipping...")
 	return
-}
+} 
+
 try
 {
 	initCommonAttrTypesFromResource()
@@ -50,7 +51,6 @@ try
 {
 	log.warn("Error loading data", e)
 }
-
 
 void initCommonAttrTypesFromResource() throws EngineException
 {
@@ -158,7 +158,7 @@ void initOAuthClient()
 
 	EntityParam entityP = new EntityParam(oauthClientA.getEntityId())
 	entityCredentialManagement.setEntityCredential(entityP, "userPassword", pToken2.toJson())
-	log.warn("Furms OAuth client user was created with default password.  Please change it! U: oauth-client P: oauth-pass1")
+	log.warn("Furms OAuth client user was created.")
 
 	Attribute cnA = StringAttribute.of(NAME_ATTR, "/", "OAuth client")
 	attributesManagement.createAttribute(entityP, cnA)

@@ -4,4 +4,6 @@ runtimeAppDir: "{{installDir}}/current"
 
 truststoreTargetFileName: truststore.jks
 
+unityApiClientUsername: api-admin
+unityOauthClientUsername: oauth-client
 

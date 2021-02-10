@@ -9,10 +9,6 @@ unity:
   initialAdminPassword:  -- set -- me --
   proxyCount:            -- set -- me --
 
-  apiClient:
-    username:            -- set -- me --
-    password:            -- set -- me --
-
   pki:
     keyStore:
       file:              -- set -- me --
@@ -33,10 +29,6 @@ unity:
     clientId:            -- set -- me --
     clientSecret:        -- set -- me --
     discoveryEndpoint:   -- set -- me --
-
-  oauthClient:
-    username:            -- set -- me --
-    password:            -- set -- me --
 
 furmsServer:
   host: localhost

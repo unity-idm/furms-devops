@@ -16,11 +16,11 @@ furms:
          trust-store-password: {{furmsServer.pki.trustStore.password}}
 
       admin-url: https://{{unity.host}}:{{unity.port}}/rest-admin/v1
-      admin-user: {{unity.apiClient.username}}
-      admin-password: {{unity.apiClient.password}}
+      admin-user: {{unityApiClientUsername}}
+      admin-password: {{unityApiClientPassword}}
       oAuth:
-         clientId: {{unity.oauthClient.username}}
-         clientSecret: {{unity.oauthClient.password}}
+         clientId: {{unityOauthClientUsername}}
+         clientSecret: {{unityOauthClientPassword}}
    url: https://{{furmsServer.advertisedHost}}
    psk:
       centralIdPUser: {{furmsServer.preSharedKeys.cIdP.username}}
