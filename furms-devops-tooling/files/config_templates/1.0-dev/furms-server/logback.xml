@@ -1,13 +1,28 @@
 <configuration scan="true" scanPeriod="10 seconds">
 
-  <appender name="file" class="ch.qos.logback.core.FileAppender">
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>logs/furms-service.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/furms-service-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>90</maxHistory>
+      <totalSizeCap>10GB</totalSizeCap>
+    </rollingPolicy>
+    
     <encoder>
-      <pattern>%date [%10.10thread] [%8.-8X{user}] [%10.10X{tenant}] [%8.-8X{plan}] %-5level %40.40logger - %msg%n</pattern>
+      <pattern>%date [%10.10thread] %-5level %logger - %msg%n</pattern>
     </encoder>
   </appender>
 
   <root level="INFO">
-    <appender-ref ref="file" />
-  </root>  
+    <appender-ref ref="ROLLING" />
+  </root>
+  
+  <logger name="io.imunity.furms" level="INFO" />
+
+  <logger name="org.springframework.security" level="INFO" />
+  <logger name="org.springframework.security.oauth2" level="INFO" />
+  <logger name="org.springframework.web.client.RestTemplate" level="INFO" />
+  <logger name="org.springframework.context.support" level="WARN" />
+  
 </configuration>
