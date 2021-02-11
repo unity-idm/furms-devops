@@ -17,6 +17,11 @@
 
   - import_tasks: setup-server.yml
 
+  - name: install identity config file
+    copy:
+      src: "files/furms-app.conf"
+      dest: "{{serviceCurrentAppDir}}/{{furmsDeliverableBaseName}}.conf"
+
   - name: remove javadoc jar
     file:
       state: absent
