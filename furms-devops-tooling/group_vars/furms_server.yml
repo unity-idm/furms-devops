@@ -19,6 +19,3 @@ certsDestinationDir: "{{serviceRuntimeAppDir}}"
 keystoreSource: "{{furmsServer.pki.keyStore.file}}"
 keystoreTargetFileName: "keystore.{{furmsServer.pki.keyStore.type}}"
 
-truststoreSource: "{{furmsServer.pki.trustStore.file}}"
-
-

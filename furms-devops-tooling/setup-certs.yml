@@ -19,5 +19,5 @@
 
   - name: install truststore
     copy:
-      src: "{{truststoreSource}}"
+      src: "{{trustStore.file}}"
       dest: "{{certsDestinationDir}}/{{truststoreTargetFileName}}"

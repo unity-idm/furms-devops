@@ -12,7 +12,7 @@ furms:
       url: https://{{unity.advertisedHost}}
       ssl:
          trust-store: file:./{{truststoreTargetFileName}}
-         trust-store-password: {{furmsServer.pki.trustStore.password}}
+         trust-store-password: {{trustStore.password}}
 
       admin-url: https://{{unity.host}}:{{unity.port}}/rest-admin/v1
       admin-user: {{unityApiClientUsername}}

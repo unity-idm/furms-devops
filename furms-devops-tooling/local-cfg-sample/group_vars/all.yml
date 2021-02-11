@@ -1,6 +1,10 @@
 installDir: "{{inventory_dir}}/services"
 furmsVersion: 1.0.0
 
+trustStore:
+  file:                  -- set -- me --
+  password:              -- set -- me --
+
 unity:
   host: localhost
   port: 2443
@@ -13,9 +17,6 @@ unity:
     keyStore:
       file:              -- set -- me --
       type:              -- set -- me --
-      password:          -- set -- me --
-    trustStore:
-      file:              -- set -- me --
       password:          -- set -- me --
 
   db:
@@ -38,9 +39,6 @@ furmsServer:
     keyStore:
       file:              -- set -- me --
       type:              -- set -- me --
-      password:          -- set -- me --
-    trustStore:
-      file:              -- set -- me --
       password:          -- set -- me --
 
   db:
