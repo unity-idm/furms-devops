@@ -7,4 +7,6 @@ truststoreTargetFileName: truststore.jks
 unityApiClientUsername: api-admin
 unityOauthClientUsername: oauth-client
 
-templateFilesVersion: "{{furmsVersion | regex_search('([0-9]+\\.[0-9]+)')}}"
+templateFilesVersionSufix: "{{ '-dev' if furmsVersion.endswith('SNAPSHOT') else '' }}"
+templateFilesVersionPrefix: "{{furmsVersion | regex_search('([0-9]+\\.[0-9]+)')}}"
+templateFilesVersion: "{{templateFilesVersionPrefix}}{{templateFilesVersionSufix}}"
