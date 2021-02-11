@@ -13,7 +13,6 @@ unity:
     keyStore:
       file:              -- set -- me --
       type:              -- set -- me --
-      keyAlias:          -- set -- me --
       password:          -- set -- me --
     trustStore:
       file:              -- set -- me --
@@ -39,7 +38,6 @@ furmsServer:
     keyStore:
       file:              -- set -- me --
       type:              -- set -- me --
-      keyAlias:          -- set -- me --
       password:          -- set -- me --
     trustStore:
       file:              -- set -- me --
