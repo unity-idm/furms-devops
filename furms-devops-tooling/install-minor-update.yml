@@ -1,16 +1,8 @@
 ---
 
-#
-# Assuming 1.0.0-a2 version is expected to be installed, execute ansible with 
-# the following additional arguments:
-# --extra-vars "furmsServiceVersion=1.0.0-a2"
-#
-
 - name: Check type of deployment
   hosts: furms_server
   tasks:
-  - include_vars:
-      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
   - set_fact: 
       isSnapshot: "{{furmsServiceVersion.endswith('SNAPSHOT')}}"
 

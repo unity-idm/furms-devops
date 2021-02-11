@@ -4,7 +4,7 @@
   tasks:
   - name: Include version vars
     include_vars:
-      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
+      file: "files/config_templates/{{templateFilesVersion}}/version_vars.yml"
 
   - name: create certs directory
     file:

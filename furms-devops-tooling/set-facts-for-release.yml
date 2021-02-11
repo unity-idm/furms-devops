@@ -1,6 +1,4 @@
 ---
-  - include_vars:
-      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
   - set_fact:
       furmsDistFile: furms-server-{{furmsServiceVersion}}-dist.tar.gz
   - set_fact:

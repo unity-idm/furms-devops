@@ -2,8 +2,6 @@
 - name: Check type of deployment
   hosts: furms_server
   tasks:
-  - include_vars:
-      file: "files/config_templates/{{furmsVersion}}/version_vars.yml"
   - set_fact: 
       isSnapshot: "{{furmsServiceVersion.endswith('SNAPSHOT')}}"
 
@@ -29,11 +27,6 @@
       state: absent
       path: "{{serviceCurrentAppDir}}/{{furmsDeliverableBaseName}}-sources.jar"
 
-  - name: create symlink to FURMS service
-    file:
-      state: link
-      src: "{{furmsDeliverableJar}}"
-      dest: "{{serviceCurrentAppDir}}/{{serviceCmd}}"
 
 
   

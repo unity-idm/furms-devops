@@ -1,5 +1,5 @@
 installDir: "{{inventory_dir}}/workspace/ansible-test"
-furmsVersion: 0.0.1
+furmsVersion: 1.0.0
 
 unity:
   host: localhost

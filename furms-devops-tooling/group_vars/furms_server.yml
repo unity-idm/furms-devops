@@ -1,7 +1,7 @@
 serviceDir: "furms-server"
 
-furmsServiceMajorVersion: "{{furmsServiceVersion | regex_search('([0-9]+\\.[0-9]+)')}}"
-serviceVersionedDir: "furms-server-{{furmsServiceMajorVersion}}"
+furmsServiceVersion: "{{furmsVersion}}"
+serviceVersionedDir: "furms-server-{{furmsServiceVersion}}"
 serviceCurrentAppDir: "{{currentAppDir}}/{{serviceDir}}"
 serviceRuntimeAppDir: "{{runtimeAppDir}}/{{serviceDir}}"
 serviceInstallationDir: "{{currentAppDir}}/{{serviceVersionedDir}}"
@@ -9,7 +9,7 @@ serviceInstallationDir: "{{currentAppDir}}/{{serviceVersionedDir}}"
 furmsDeliverableBaseName: "furms-server-{{furmsServiceVersion}}"
 furmsDeliverableJar: "{{furmsDeliverableBaseName}}.jar"
 
-serviceCmd: "current.jar"
+serviceCmd: "{{furmsDeliverableJar}}"
 serviceStartCmd: "{{serviceCmd}} start"
 serviceStopCmd: "{{serviceCmd}} stop"
 serviceURL: "https://{{furmsServer.host}}:{{furmsServer.port}}"
