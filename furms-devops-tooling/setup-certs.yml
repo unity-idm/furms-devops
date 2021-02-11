@@ -1,6 +1,6 @@
 ---
 - name: Install certificates to servers
-  hosts: all_servers
+  hosts: "{{targetHosts if targetHosts is defined else 'all_servers'}}"
   tasks:
   - name: Include version vars
     include_vars:
