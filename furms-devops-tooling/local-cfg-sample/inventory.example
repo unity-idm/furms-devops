@@ -1,0 +1,27 @@
+################################################################################
+# Inventory file with an example of how to configure remote hosts for FURMS 
+# system components.
+# NOTE: the ansible_host below should be set to the name of the host to 
+# connect to.
+################################################################################
+
+[unity]
+local-unity             ansible_host=unity-host 
+
+
+[furms_server]
+local-furms-server      ansible_host=furms-host
+
+
+################################################################################
+# Do not edit below this line
+################################################################################
+[local_only]
+localhost               ansible_connection=local
+
+[all_servers:children]
+unity
+furms_server
+
+
+
