@@ -1,0 +1,57 @@
+####################################################
+# Example of variables file for a FURMS system
+# configured behind a one proxy.
+####################################################
+installDir: "{{inventory_dir}}/services"
+furmsVersion: 1.0.0
+
+trustStore:
+  file: "{{inventory_dir}}/certs/truststore.jks"
+  password: change-me
+
+unity:
+  host: localhost
+  port: 2443
+  advertisedHost: unity.furms.com
+  initialAdminUsername: fenix-uber-admin
+  initialAdminPassword: fenix-uber-admin-password
+  proxyCount: 1
+
+  pki:
+    keyStore:
+      file: "{{inventory_dir}}/certs/unity/keystore.p12"
+      type: pkcs12
+      password: change-me
+
+  db:
+    host: localhost:5432
+    dbName: furms-unity-db-1.0
+    username: furms-unity-user
+    password: furms-unity-user-password
+
+  cIdP:
+    clientId: APP-XXXXXXX-XXXXX-XXXXXXXXXXXXXX
+    clientSecret: aaaabbbbccccddddeeeeffffgggghhhhiiiijjjjkkkllllmmmnnnooopppqqqrrr
+    discoveryEndpoint: https://proxy.acc.fenix.eduteams.org/.well-known/openid-configuration
+
+furmsServer:
+  host: localhost
+  port: 3443
+  advertisedHost: app.furms.com
+
+  pki:
+    keyStore:
+      file: "{{inventory_dir}}/certs/furms/keystore.p12"
+      type: pkcs12
+      password: change-me
+
+  db:
+    host: localhost:5432
+    dbName: furms-service-db-1.0
+    username: furms-service-user
+    password: furms-service-user-password
+
+  preSharedKeys:
+    cIdP:
+      username: cidpusername
+      password: cpidpasswd
