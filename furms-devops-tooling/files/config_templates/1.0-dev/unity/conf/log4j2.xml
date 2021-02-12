@@ -87,11 +87,6 @@
 
 	<!-- Where to log? -->
 	<Appenders>
-		<Console name="CONSOLE">
-			<PatternLayout
-				pattern="%d{ISO8601} [%t] %-5p %c:%equals{%1x}{[]}{} %m%n" />
-		</Console>
-
 		<RollingRandomAccessFile name="LOGFILE"
 			fileName="logs/unity-server.log"
 			filePattern="logs/unity-server.log.%d{yyyy-MM-dd}">
@@ -103,7 +98,13 @@
 				<TimeBasedTriggeringPolicy interval="1"
 					modulate="true" />
 			</Policies>
-			<DefaultRolloverStrategy />
+
+			<DefaultRolloverStrategy max="90">
+				<Delete basePath="logs/" maxDepth="1">
+					<IfFileName glob="unity-server.log.*" />
+					<IfLastModified age="91d" />
+				</Delete>
+			</DefaultRolloverStrategy>
 		</RollingRandomAccessFile>
 	</Appenders>
 
