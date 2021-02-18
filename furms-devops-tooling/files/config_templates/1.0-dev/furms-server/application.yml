@@ -1,5 +1,6 @@
 server:
    port: {{furmsServer.port}}
+   address: {{furmsServer.host}}
    ssl:
       key-store-type: {{furmsServer.pki.keyStore.type}}
       key-store-password: {{furmsServer.pki.keyStore.password}}
