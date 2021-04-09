@@ -36,6 +36,17 @@ spring:
       username: {{furmsServer.db.username}}
       password: {{furmsServer.db.password}}
       driver-class-name: org.postgresql.Driver
+   rabbitmq:
+      host: {{furmsServer.broker.host}}
+      port: {{furmsServer.broker.port}}
+      username: {{furmsServer.broker.username}}
+      password: {{furmsServer.broker.password}}
+      connection-timeout: 10000
+      ssl:
+          enabled: true
+          trustStore: ${furms.unity.ssl.trust-store}
+          trustStorePassword: ${furms.unity.ssl.trust-store-password}
+          algorithm: TLSv1.2
 
 logging:
     config: ./logback.xml

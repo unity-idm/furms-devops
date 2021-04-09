@@ -55,3 +55,9 @@ furmsServer:
     cIdP:
       username: cidpusername
       password: cpidpasswd
+
+  broker:
+    host: localhost
+    port: 5671
+    username: broker-user-name
+    password: broker-user-password
