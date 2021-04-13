@@ -57,3 +57,4 @@ furmsServer:
     port: 5671
     username:            -- set -- me --
     password:            -- set -- me --
+    virtualHost:         -- set -- me --

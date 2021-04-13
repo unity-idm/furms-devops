@@ -42,6 +42,7 @@ spring:
       username: {{furmsServer.broker.username}}
       password: {{furmsServer.broker.password}}
       connection-timeout: 10000
+      virtualHost: {{furmsServer.broker.virtualHost}}
       ssl:
           enabled: true
           trustStore: ${furms.unity.ssl.trust-store}
