@@ -33,3 +33,5 @@
     unityOauthClientPassword: "{{hostvars['localhost']['unityOauthClientPassword']}}"
 
 - import_playbook: setup-certs.yml
+
+- import_playbook: setup-reg-forms.yml

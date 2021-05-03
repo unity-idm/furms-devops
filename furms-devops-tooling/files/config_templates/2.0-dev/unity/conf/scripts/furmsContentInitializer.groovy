@@ -29,6 +29,7 @@ import pl.edu.icm.unity.types.basic.*
 @Field final String FURMS_OAUTH_USERNAME = "{{unityOauthClientUsername}}"
 @Field final String FURMS_OAUTH_PASSWORD = "{{unityOauthClientPassword}}"
 
+upsertRegistrationForms()
 
 //run only if it is the first start of the server on clean DB.
 if (!isColdStart)
@@ -49,6 +50,40 @@ try
 } catch (Exception e)
 {
 	log.warn("Error loading data", e)
+}
+
+void upsertRegistrationForms()
+{
+	java.nio.file.Path path = java.nio.file.Paths.get("conf/registrationForms/");
+	if (!path.toFile().exists())
+	{
+		log.info("No registration forms to provisoin")
+		return;
+	}
+	
+	for (java.io.File file : path.toFile().listFiles())
+	{
+		if (file.getName().endsWith("json"))
+		{
+			log.info("Provisioning forms from {} file", file.getName());
+			String json = java.nio.file.Files.readAllLines(file.toPath()).stream()
+					.collect(java.util.stream.Collectors.joining(java.lang.System.lineSeparator()));
+			List<pl.edu.icm.unity.types.registration.RegistrationForm> forms = pl.edu.icm.unity.Constants.MAPPER.readValue(json,
+					new com.fasterxml.jackson.core.type.TypeReference<java.util.List<pl.edu.icm.unity.types.registration.RegistrationForm>>() {});
+			for (pl.edu.icm.unity.types.registration.RegistrationForm form : forms)
+			{
+				if (registrationsManagement.hasForm(form.getName()))
+				{
+					log.info("Updating registration form {}", form.getName());
+					registrationsManagement.updateForm(form, true);
+				} else
+				{
+					log.info("Adding registration form {}", form.getName());
+					registrationsManagement.addForm(form);
+				}
+			}	
+		}
+	}
 }
 
 void initCommonAttrTypesFromResource() throws EngineException
