@@ -29,11 +29,10 @@ import pl.edu.icm.unity.types.basic.*
 @Field final String FURMS_OAUTH_USERNAME = "{{unityOauthClientUsername}}"
 @Field final String FURMS_OAUTH_PASSWORD = "{{unityOauthClientPassword}}"
 
-upsertRegistrationForms()
-
 //run only if it is the first start of the server on clean DB.
 if (!isColdStart)
 {
+	upsertRegistrationForms()
 	log.info("Database already initialized with content, skipping...")
 	return
 } 
@@ -46,6 +45,7 @@ try
 	setupAdminUser()
 	initOAuthClient()
 	initFurmsRestClient()
+	upsertRegistrationForms()
 
 } catch (Exception e)
 {
