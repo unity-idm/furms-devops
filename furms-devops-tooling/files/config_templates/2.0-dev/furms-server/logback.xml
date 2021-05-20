@@ -10,7 +10,7 @@
     </rollingPolicy>
     
     <encoder>
-      <pattern>%date [%10.10thread] %-5level %logger - %msg%n</pattern>
+      <pattern>%date [%10.10thread] [%X{queueName}] [%X{userId}] %-5level %logger - %msg%n</pattern>
     </encoder>
   </appender>
 
