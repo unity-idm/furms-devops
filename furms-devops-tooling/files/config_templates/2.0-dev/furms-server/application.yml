@@ -27,6 +27,8 @@ furms:
       centralIdPSecret: {{furmsServer.preSharedKeys.cIdP.password}}
    front:
       language: en
+      maxSessionInactivity: {{furmsServer.ui.maxSessionInactivityInSeconds if furmsServer.ui.maxSessionInactivityInSeconds is defined else '1800'}}
+      secondsBeforeShowingSessionExpirationWarning: {{furmsServer.ui.secondsBeforeShowingLogoutWarning if furmsServer.ui.secondsBeforeShowingLogoutWarning is defined else '120'}}
 
 spring:
    profiles:

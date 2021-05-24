@@ -62,3 +62,7 @@ furmsServer:
     username: broker-user-name
     password: broker-user-password
     virtualHost: /
+
+  ui:
+    maxSessionInactivityInSeconds: 600
+    secondsBeforeShowingLogoutWarning: 60

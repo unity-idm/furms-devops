@@ -58,3 +58,7 @@ furmsServer:
     username:            -- set -- me --
     password:            -- set -- me --
     virtualHost:         -- set -- me --
+
+  ui:
+    maxSessionInactivityInSeconds:     -- set -- me --
+    secondsBeforeShowingLogoutWarning: -- set -- me --
