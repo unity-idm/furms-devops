@@ -30,6 +30,13 @@ unity:
     clientSecret:        -- set -- me --
     discoveryEndpoint:   -- set -- me --
 
+  mail:
+    from:                -- set -- me --
+    smtp:
+      host:              -- set -- me --
+      username:          -- set -- me --
+      password:          -- set -- me --
+
 furmsServer:
   host: localhost
   port: 3443

@@ -1,3 +1,6 @@
+app:
+   version: '@project.version@'
+
 server:
    port: {{furmsServer.port}}
    address: {{furmsServer.host}}
@@ -29,6 +32,15 @@ furms:
       language: en
       maxSessionInactivity: {{furmsServer.ui.maxSessionInactivityInSeconds if furmsServer.ui.maxSessionInactivityInSeconds is defined else '1800'}}
       secondsBeforeShowingSessionExpirationWarning: {{furmsServer.ui.secondsBeforeShowingLogoutWarning if furmsServer.ui.secondsBeforeShowingLogoutWarning is defined else '120'}}
+   sshkeys:
+      cleanStaleRequestsAfter: 1D
+   notification:
+      new-policy-template-id: policyAcceptanceNew
+      new-policy-revision-template-id: policyAcceptanceRevision
+      new-invitation-template-id: invitationNew
+   invitations:
+      expiration-time-in-seconds: 604800
+      fenix-admin-form: fenixAdminForm
 
 spring:
    profiles:
