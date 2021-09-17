@@ -34,6 +34,7 @@ unity:
     from:                -- set -- me --
     smtp:
       host:              -- set -- me --
+      port:              -- set -- me --
       username:          -- set -- me --
       password:          -- set -- me --
 
