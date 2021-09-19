@@ -12,5 +12,3 @@ healthCheckPath: "/console"
 certsDestinationDir: "{{serviceRuntimeAppDir}}/conf/pki"
 keystoreSource: "{{unity.pki.keyStore.file}}"
 keystoreTargetFileName: "keystore.{{unity.pki.keyStore.type}}"
-
-registrationFormsDir: "{{serviceRuntimeAppDir}}/conf/registrationForms"

@@ -1,0 +1,19 @@
+---
+- name: Setup Unity-IdM message templates
+  gather_facts: no
+  hosts: unity
+
+  tasks:
+  - name: Copy message templates
+    copy:
+      src: "{{unity.msgTemplates.files}}/"
+      dest: "{{serviceRuntimeAppDir}}/conf/msgTemplates"
+    when: unity.msgTemplates is defined
+
+  - name: Copy message templates configuration
+    copy:
+      src: "{{unity.msgTemplates.configuration}}"
+      dest: "{{serviceRuntimeAppDir}}/conf/msgTemplates.properties"
+    when: unity.msgTemplates is defined
+
+

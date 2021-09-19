@@ -137,7 +137,7 @@ private RegistrationForm createRegistrationForm() {
 					new I18nString("You can log in now."),
 					new I18nString("Continue"),
 					true,
-					'https://localhost:3443/public/registration',
+					'https://{{furmsServer.advertisedHost}}/public/registration',
 					Duration.ofSeconds(5)
 			),
 			new RegistrationWrapUpConfig(
@@ -146,7 +146,7 @@ private RegistrationForm createRegistrationForm() {
 					new I18nString("Please contact with support."),
 					new I18nString("Continue"),
 					false,
-					'https://localhost:3443/front/start/role/chooser',
+					'https://{{furmsServer.advertisedHost}}/front/start/role/chooser',
 					Duration.ZERO
 			),
 			new RegistrationWrapUpConfig(
@@ -155,7 +155,7 @@ private RegistrationForm createRegistrationForm() {
 					new I18nString("You can log in and accept invitations."),
 					new I18nString("Continue"),
 					false,
-					'https://localhost:3443/front/users/settings/invitations',
+					'https://{{furmsServer.advertisedHost}}/front/users/settings/invitations',
 					Duration.ZERO
 			)
 	])
@@ -217,7 +217,7 @@ void upsertFurmsRestClient()
 	Attribute role = EnumAttribute.of("sys:AuthorizationRole", "/", "System Manager")
 	attributesManagement.setAttribute(entity, role)
 
-	log.info("FURMS client user {}}", (clientRestEntity == null) ? "created" : "updated")
+	log.info("FURMS client user {}", (clientRestEntity == null) ? "created" : "updated")
 }
 
 Entity getEntityWithUsernameIdentity(String username)

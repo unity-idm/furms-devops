@@ -12,3 +12,4 @@
   - name: Backup distribution config 
     command: mv "{{serviceInstallationDir}}/conf" "{{serviceInstallationDir}}/conf-orig"
 
+

@@ -38,6 +38,10 @@ unity:
       username:          -- set -- me --
       password:          -- set -- me --
 
+  msgTemplates:
+    files:               -- set -- me --
+    configuration:       -- set -- me --
+
 furmsServer:
   host: localhost
   port: 3443
