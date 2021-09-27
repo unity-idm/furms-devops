@@ -62,28 +62,75 @@ try
 	log.warn("Error loading data", e)
 }
 
+
 void upsertRegistrationForms()
 {
-	RegistrationForm fenixAdminForm = createRegistrationForm()
-	fenixAdminForm.setTranslationProfile(
-			new TranslationProfile('registrationProfile', '', ProfileType.REGISTRATION, [
-					new TranslationRule("true", new TranslationAction("autoProcess", ["accept"] as String[])),
-					new TranslationRule("true", new TranslationAction("addToGroup", "'/fenix/users'")),
-					new TranslationRule("true", new TranslationAction("addAttribute", ["furmsFenixRole", "/fenix/users", "['ADMIN']"] as String[]))
-			])
-	)
-	if (registrationsManagement.hasForm(fenixAdminForm.getName()))
-	{
-		log.info("Updateing registration form: {}", fenixAdminForm.getName());
-		registrationsManagement.updateForm(fenixAdminForm, true);
-	} else
-	{
-		log.info("Creating new registration form:", fenixAdminForm.getName());
-		registrationsManagement.addForm(fenixAdminForm);
-	}
+	upsertFenixAdminRegistrationForm()
+	upsertSiteUserRegistrationForm()
+	upsertCommunityAdminRegistrationForm()
+	upsertProjectUserRegistrationForm()
 }
 
-private RegistrationForm createRegistrationForm() {
+void upsertFenixAdminRegistrationForm()
+{
+	def fenixGroupParam = new GroupRegistrationParam()
+	fenixGroupParam.setGroupPath("/fenix/users")
+
+	def fenixRoleParam = new AttributeRegistrationParam()
+	fenixRoleParam.setGroup('/fenix/users')
+	fenixRoleParam.setAttributeType('furmsFenixRole')
+	fenixRoleParam.setRetrievalSettings(ParameterRetrievalSettings.interactive)
+	fenixRoleParam.setGroup('DYN:/fenix/users')
+
+	upsertRegistrationForm("fenixForm", fenixGroupParam, fenixRoleParam)
+}
+
+void upsertSiteUserRegistrationForm()
+{
+	def siteGroupParam = new GroupRegistrationParam()
+	siteGroupParam.setGroupPath("/fenix/sites/*/users")
+
+	def siteRoleParam = new AttributeRegistrationParam()
+	siteRoleParam.setGroup('/')
+	siteRoleParam.setAttributeType('furmsSiteRole')
+	siteRoleParam.setRetrievalSettings(ParameterRetrievalSettings.interactive)
+	siteRoleParam.setGroup('DYN:/fenix/sites/*/users')
+
+	upsertRegistrationForm("siteForm", siteGroupParam, siteRoleParam)
+}
+
+void upsertCommunityAdminRegistrationForm()
+{
+	def communityGroupParam = new GroupRegistrationParam()
+	communityGroupParam.setGroupPath("/fenix/communities/*/users")
+
+	def communityRoleParam = new AttributeRegistrationParam()
+	communityRoleParam.setGroup('/')
+	communityRoleParam.setAttributeType('furmsCommunityRole')
+	communityRoleParam.setRetrievalSettings(ParameterRetrievalSettings.interactive)
+	communityRoleParam.setGroup('DYN:/fenix/communities/*/users')
+
+	upsertRegistrationForm("communityForm", communityGroupParam, communityRoleParam)
+}
+
+void upsertProjectUserRegistrationForm()
+{
+	def projectGroupParam = new GroupRegistrationParam()
+	projectGroupParam.setGroupPath("/fenix/communities/*/projects/*/users")
+
+	def projectRoleParam = new AttributeRegistrationParam()
+	projectRoleParam.setGroup('/')
+	projectRoleParam.setAttributeType('furmsProjectRole')
+	projectRoleParam.setRetrievalSettings(ParameterRetrievalSettings.interactive)
+	projectRoleParam.setGroup('DYN:/fenix/communities/*/projects/*/users')
+
+	upsertRegistrationForm("projectForm", projectGroupParam, projectRoleParam)
+}
+
+private RegistrationForm upsertRegistrationForm(String name, 
+		GroupRegistrationParam groupParam, 
+		AttributeRegistrationParam roleParam) 
+{
 	def identityParam = new IdentityRegistrationParam()
 	identityParam.setIdentityType('identifier')
 	identityParam.setRetrievalSettings(ParameterRetrievalSettings.automaticHidden)
@@ -92,7 +139,7 @@ private RegistrationForm createRegistrationForm() {
 	registrationFormNotifications.setInvitationTemplate('registrationInvitation')
 
 	def form = new RegistrationFormBuilder()
-			.withName("fenixAdminForm")
+			.withName(name)
 			.withPubliclyAvailable(true)
 			.withByInvitationOnly(true)
 			.withAutoLoginToRealm('main')
@@ -102,33 +149,35 @@ private RegistrationForm createRegistrationForm() {
 			.build()
 	form.setIdentityParams([identityParam])
 
+	form.setGroupParams([groupParam])
+
 	def surnameParam = new AttributeRegistrationParam()
 	surnameParam.setGroup('/')
-	surnameParam.setAttributeType('surname')
+	surnameParam.setAttributeType(SURNAME_ATTR)
 	surnameParam.setOptional(true)
 	surnameParam.setRetrievalSettings(ParameterRetrievalSettings.automaticHidden)
 
 	def nameParam = new AttributeRegistrationParam()
 	nameParam.setGroup('/')
-	nameParam.setAttributeType('name')
+	nameParam.setAttributeType(NAME_ATTR)
 	nameParam.setOptional(true)
 	nameParam.setRetrievalSettings(ParameterRetrievalSettings.automaticHidden)
 
 
 	def firstnameParam = new AttributeRegistrationParam()
 	firstnameParam.setGroup('/')
-	firstnameParam.setAttributeType('firstname')
+	firstnameParam.setAttributeType(FIRSTNAME_ATTR)
 	firstnameParam.setOptional(true)
 	firstnameParam.setRetrievalSettings(ParameterRetrievalSettings.automaticHidden)
 
 	def emailParam = new AttributeRegistrationParam()
 	emailParam.setGroup('/')
-	emailParam.setAttributeType('email')
+	emailParam.setAttributeType(EMAIL_ATTR)
 	emailParam.setConfirmationMode(ConfirmationMode.CONFIRMED)
 	emailParam.setRetrievalSettings(ParameterRetrievalSettings.automaticHidden)
 
 	form.setAttributeParams([
-			surnameParam, nameParam, firstnameParam, emailParam
+			roleParam, surnameParam, nameParam, firstnameParam, emailParam
 	])
 	form.setWrapUpConfig([
 			new RegistrationWrapUpConfig(
@@ -159,7 +208,21 @@ private RegistrationForm createRegistrationForm() {
 					Duration.ZERO
 			)
 	])
-	form
+	form.setTranslationProfile(
+			new TranslationProfile('registrationProfile', '', ProfileType.REGISTRATION, [
+					new TranslationRule("true", new TranslationAction("autoProcess", ["accept"] as String[]))
+			])
+	)
+
+	if (registrationsManagement.hasForm(form.getName()))
+	{
+		log.info("Updateing registration form: {}", form.getName());
+		registrationsManagement.updateForm(form, true);
+	} else
+	{
+		log.info("Creating new registration form: {}", form.getName());
+		registrationsManagement.addForm(form);
+	}
 }
 
 void initCommonAttrTypesFromResource() throws EngineException
