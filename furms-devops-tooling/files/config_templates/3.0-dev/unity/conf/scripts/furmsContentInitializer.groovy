@@ -147,6 +147,8 @@ private RegistrationForm upsertRegistrationForm(String name,
 			.withDefaultCredentialRequirement("user password")
 			.withNotificationsConfiguration(registrationFormNotifications)
 			.withExternalSignupSpec(new ExternalSignupSpec([new AuthenticationOptionsSelector('registration', 'registration')]))
+			.withDisplayedName(new I18nString("en", "Sign up to FURMS"))
+			.withFormInformation(new I18nString("en", "You were invited to become \${custom.role} in FURMS."))
 			.build()
 	form.setIdentityParams([identityParam])
 
