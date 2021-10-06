@@ -41,6 +41,7 @@ import java.time.Duration
 //run only if it is the first start of the server on clean DB.
 if (!isColdStart)
 {
+	upsertAdminUser()
 	upsertFurmsRestClient()
 	upsertRegistrationForms()
 	log.info("Database already initialized, configuraiton update...")
@@ -308,6 +309,14 @@ void initDefaultAuthzPolicy() throws EngineException
 	log.info("Provisioned default FURMS authorization policy")
 }
 
+void upsertAdminUser() throws EngineException
+{
+	String adminU = config.getValue(UnityServerConfiguration.INITIAL_ADMIN_USER)
+	EntityParam entity = new EntityParam(new IdentityTaV(UsernameIdentity.ID, adminU))
+	
+	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "admin@not-existing-1qaz.example.com")
+	attributesManagement.setAttribute(entity, emailA)
+}
 
 void setupAdminUser() throws EngineException
 {
@@ -317,7 +326,7 @@ void setupAdminUser() throws EngineException
 	Attribute nameA = StringAttribute.of(NAME_ATTR, "/", "Default FENIX Administrator")
 	attributesManagement.createAttribute(entity, nameA)
 	
-	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "admin@domain.com")
+	Attribute emailA = VerifiableEmailAttribute.of(EMAIL_ATTR, "/", "admin@not-existing-1qaz.example.com")
 	attributesManagement.createAttribute(entity, emailA)
 
 	Attribute firstnameA = StringAttribute.of(FIRSTNAME_ATTR, "/", "Default")
