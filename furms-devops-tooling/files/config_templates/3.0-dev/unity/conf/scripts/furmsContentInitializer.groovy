@@ -41,6 +41,7 @@ import java.time.Duration
 //run only if it is the first start of the server on clean DB.
 if (!isColdStart)
 {
+	upsertCommonAttrTypesFromResource()
 	upsertAdminUser()
 	upsertFurmsRestClient()
 	upsertRegistrationForms()
@@ -50,7 +51,7 @@ if (!isColdStart)
 
 try
 {
-	initCommonAttrTypesFromResource()
+	upsertCommonAttrTypesFromResource()
 	initDefaultAuthzPolicy()
 	initBaseGroups()
 	setupAdminUser()
@@ -228,31 +229,39 @@ private RegistrationForm upsertRegistrationForm(String name,
 	}
 }
 
-void initCommonAttrTypesFromResource() throws EngineException
+void upsertCommonAttrTypesFromResource() throws EngineException
 {
+	Map<String, AttributeType> existingAttrs = attributeTypeManagement.getAttributeTypesAsMap();
 	List<Resource> resources = attributeTypeSupport.getAttibuteTypeResourcesFromClasspathDir()
 	for (Resource r : resources)
-		loadAttrsFromFile(r)
+		upsertAttrsFromFile(r, existingAttrs)
 		
 	Resource furmsAttributes = new FileSystemResource("conf/attributeTypes/" + COMMON_ATTR_FILE + ".json");
 	if (furmsAttributes.exists())
-		loadAttrsFromFile(furmsAttributes)
+		upsertAttrsFromFile(furmsAttributes, existingAttrs)
 	
 	log.info("Provisioned FURMS attribute types from resource")
 }
 
-void loadAttrsFromFile(Resource r)
+void upsertAttrsFromFile(Resource r, Map<String, AttributeType> existingAttrs)
 {
 	if (FilenameUtils.getBaseName(r.getFilename()).equals(COMMON_ATTR_FILE))
 	{
 		List<AttributeType> attrTypes = attributeTypeSupport.loadAttributeTypesFromResource(r)
 		for (AttributeType type : attrTypes)
 		{
-			attributeTypeManagement.addAttributeType(type)
-			log.info("Addin attribute type: " + type)
+			if (existingAttrs.containsKey(type.getName()))
+			{
+				attributeTypeManagement.updateAttributeType(type)
+				log.info("Updating attribute type: " + type)
+			} else
+			{
+				attributeTypeManagement.addAttributeType(type)
+				log.info("Adding attribute type: " + type)
+			}
     	}
 	}
-	log.info("Common attributes added from resource file: " + r.getFilename())
+	log.info("Common attributes upserted from resource file: " + r.getFilename())
 }
 
 void upsertFurmsRestClient()
