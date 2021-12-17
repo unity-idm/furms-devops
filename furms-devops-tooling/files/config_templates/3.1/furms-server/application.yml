@@ -52,8 +52,6 @@ furms:
       project-form: projectForm
 
 spring:
-   profiles:
-      active: demo-data-provisioning,workshop
    datasource:
       url: jdbc:postgresql://{{furmsServer.db.host}}/{{furmsServer.db.dbName}}
       username: {{furmsServer.db.username}}
