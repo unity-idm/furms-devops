@@ -74,3 +74,11 @@ furmsServer:
   ui:
     maxSessionInactivityInSeconds:     -- set -- me --
     secondsBeforeShowingLogoutWarning: -- set -- me --
+
+  layout:
+    cssStyle:             -- set -- me --
+    panels:
+      top:                -- set -- me --
+      left:               -- set -- me --
+      right:              -- set -- me --
+      bottom:             -- set -- me --

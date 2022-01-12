@@ -29,9 +29,18 @@ furms:
       centralIdPUser: {{furmsServer.preSharedKeys.cIdP.username}}
       centralIdPSecret: {{furmsServer.preSharedKeys.cIdP.password}}
    front:
-      language: en
       maxSessionInactivity: {{furmsServer.ui.maxSessionInactivityInSeconds if furmsServer.ui.maxSessionInactivityInSeconds is defined else '1800'}}
       secondsBeforeShowingSessionExpirationWarning: {{furmsServer.ui.secondsBeforeShowingLogoutWarning if furmsServer.ui.secondsBeforeShowingLogoutWarning is defined else '120'}}
+      language: en
+      layout:
+         styles:
+            custom: file:./layout/custom_style.css
+         panels:
+            top: file:./layout/top_panel.html
+            left: file:./layout/left_panel.html
+            right: file:./layout/right_panel.html
+            bottom: file:./layout/bottom_panel.html
+
    sshkeys:
       cleanStaleRequestsAfter: 1D
    notification:

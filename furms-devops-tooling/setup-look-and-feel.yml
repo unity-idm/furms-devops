@@ -1,0 +1,37 @@
+---
+- name: Setup FURMS styles and panels
+  gather_facts: no
+  hosts: furms_server
+
+  tasks:
+  - name: Install custom css style
+    copy:
+      src: "{{furmsServer.layout.cssStyle}}"
+      dest: "{{serviceRuntimeAppDir}}/layout/custom_style.css"
+    when: furmsServer.layout.cssStyle is defined
+
+  - name: Install top panel
+    copy:
+      src: "{{furmsServer.layout.panels.top}}"
+      dest: "{{serviceRuntimeAppDir}}/layout/top_panel.html"
+    when: furmsServer.layout.panels.top is defined
+
+  - name: Install bottom panel
+    copy:
+      src: "{{furmsServer.layout.panels.bottom}}"
+      dest: "{{serviceRuntimeAppDir}}/layout/bottom_panel.html"
+    when: furmsServer.layout.panels.bottom is defined
+
+  - name: Install left panel
+    copy:
+      src: "{{furmsServer.layout.panels.left}}"
+      dest: "{{serviceRuntimeAppDir}}/layout/left_panel.html"
+    when: furmsServer.layout.panels.left is defined
+
+  - name: Install right panel
+    copy:
+      src: "{{furmsServer.layout.panels.right}}"
+      dest: "{{serviceRuntimeAppDir}}/layout/right_panel.html"
+    when: furmsServer.layout.panels.right is defined
+
+
