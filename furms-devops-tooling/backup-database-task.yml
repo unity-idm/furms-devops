@@ -1,0 +1,11 @@
+---
+- name: "Back up {{ dbName }} database"
+  postgresql_db:
+    state: dump
+    name: "{{ dbName }}"
+    login_host: "{{ dbHost.split(':')[0] }}"
+    port: "{{ 5432 if (dbHost.split(':')|length) != 2 else dbHost.split(':')[1] }}"
+    login_user: "{{ dbUsername }}"
+    login_password: "{{ dbPassword }}"
+    target: "{{ backupDirectory }}/{{ now }}/{{ dbName }}.dump.gz"
+

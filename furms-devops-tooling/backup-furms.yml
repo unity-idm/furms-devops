@@ -1,0 +1,35 @@
+---
+- name: Perform FURMS backup
+  hosts: local_only
+
+  tasks:
+  - name: "Set timestamp of the backup"
+    set_fact:
+      now: "{{ lookup('pipe', 'date +%F-%T') + '_' + furmsVersion }}"
+
+  - name: "Create a backup directory"
+    file:
+      path: "{{backupDirectory}}/{{ now }}/"
+      state: directory
+
+  - import_tasks: backup-database-task.yml
+    vars:
+      dbName: "{{furmsServer.db.dbName}}"
+      dbHost: "{{furmsServer.db.host}}"
+      dbUsername: "{{furmsServer.db.username}}"
+      dbPassword: "{{furmsServer.db.password}}"
+
+
+  - import_tasks: backup-database-task.yml
+    vars:
+      dbName: "{{unity.db.dbName}}"
+      dbHost: "{{unity.db.host}}"
+      dbUsername: "{{unity.db.username}}"
+      dbPassword: "{{unity.db.password}}"
+
+  - name: Backup inventory and group_vars
+    archive:
+      path: 
+      - "{{inventory_dir}}/inventory"
+      - "{{inventory_dir}}/group_vars"
+      dest: "{{backupDirectory}}/{{now}}/ansible_config.tgz"
