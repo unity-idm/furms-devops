@@ -9,7 +9,7 @@
 
   - name: "Create a backup directory"
     file:
-      path: "{{backupDirectory}}/{{ now }}/"
+      path: "{{backupDir}}/{{ now }}/"
       state: directory
 
   - import_tasks: backup-database-task.yml
@@ -32,4 +32,4 @@
       path: 
       - "{{inventory_dir}}/inventory"
       - "{{inventory_dir}}/group_vars"
-      dest: "{{backupDirectory}}/{{now}}/ansible_config.tgz"
+      dest: "{{backupDir}}/{{now}}/ansible_config.tgz"

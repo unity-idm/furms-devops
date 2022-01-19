@@ -1,7 +1,7 @@
 installDir: "{{inventory_dir}}/services"
 furmsVersion: 1.0.0
 
-backupDirectory:         -- set -- me --
+backupDir:               -- set -- me --
 
 trustStore:
   file:                  -- set -- me --
