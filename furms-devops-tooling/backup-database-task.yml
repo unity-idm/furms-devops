@@ -1,5 +1,5 @@
 ---
-- name: "Back up {{ dbName }} database"
+- name: "Backup {{ dbName }} database"
   postgresql_db:
     state: dump
     name: "{{ dbName }}"

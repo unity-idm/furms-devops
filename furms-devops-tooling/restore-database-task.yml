@@ -1,5 +1,9 @@
 ---
 - name: "Restore {{ dbName }} database"
+  vars:
+    dbDumpFileName: "{{ dbName }}.dump.gz"
+    dbDumpFileSubdir: "{{ backupDir + '/' + dbDumpDirName if dbDumpDirName is defined else dbDumpDirPath }}"
+    dbDumpFilePath: "{{ dbDumpFileSubdir }}/{{ dbDumpFileName }}"
   postgresql_db:
     state: restore
     name: "{{ dbName }}"
@@ -7,5 +11,5 @@
     port: "{{ 5432 if (dbHost.split(':')|length) != 2 else dbHost.split(':')[1] }}"
     login_user: "{{ dbUsername }}"
     login_password: "{{ dbPassword }}"
-    target: "{{ backupDir }}/{{ dbDumpDir }}/{{ dbName }}.dump.gz"
+    target: "{{ dbDumpFilePath }}"
 
