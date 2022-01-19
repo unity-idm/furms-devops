@@ -5,7 +5,7 @@
   tasks:
   - name: "Set timestamp of the backup"
     set_fact:
-      now: "{{ lookup('pipe', 'date +%F-%T') + '_' + furmsVersion }}"
+      now: "{{ lookup('pipe', 'date +%F_%T') + '_v' + furmsVersion }}"
 
   - name: "Create a backup directory"
     file:
