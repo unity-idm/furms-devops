@@ -7,5 +7,5 @@
     port: "{{ 5432 if (dbHost.split(':')|length) != 2 else dbHost.split(':')[1] }}"
     login_user: "{{ dbUsername }}"
     login_password: "{{ dbPassword }}"
-    target: "{{ backupDir }}/{{ now }}/{{ dbName }}.dump.gz"
+    target: "{{ backupDir }}/{{ now }}/{{ dbName }}.dump.tar"
 

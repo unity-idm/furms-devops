@@ -1,7 +1,7 @@
 ---
 - name: "Restore {{ dbName }} database"
   vars:
-    dbDumpFileName: "{{ dbName }}.dump.gz"
+    dbDumpFileName: "{{ dbName }}.dump.tar"
     dbDumpFileSubdir: "{{ backupDir + '/' + dbDumpDirName if dbDumpDirName is defined else dbDumpDirPath }}"
     dbDumpFilePath: "{{ dbDumpFileSubdir }}/{{ dbDumpFileName }}"
   postgresql_db:
@@ -12,4 +12,4 @@
     login_user: "{{ dbUsername }}"
     login_password: "{{ dbPassword }}"
     target: "{{ dbDumpFilePath }}"
-
+    target_opts: "--clean --if-exists"
