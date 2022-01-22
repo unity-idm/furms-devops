@@ -70,6 +70,8 @@ spring:
       username: {{furmsServer.db.username}}
       password: {{furmsServer.db.password}}
       driver-class-name: org.postgresql.Driver
+      hikari:
+         leak-detection-threshold: 5000  
    rabbitmq:
       host: {{furmsServer.broker.host}}
       port: {{furmsServer.broker.port}}

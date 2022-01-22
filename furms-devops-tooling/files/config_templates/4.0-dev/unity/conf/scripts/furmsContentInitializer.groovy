@@ -147,7 +147,7 @@ private RegistrationForm upsertRegistrationForm(String name,
 			.withAutoLoginToRealm('main')
 			.withDefaultCredentialRequirement("user password")
 			.withNotificationsConfiguration(registrationFormNotifications)
-			.withExternalSignupSpec(new ExternalSignupSpec([new AuthenticationOptionsSelector('registration', 'registration')]))
+			.withExternalSignupSpec(new ExternalSignupSpec([new AuthenticationOptionsSelector('oauth', 'local')]))
 			.withDisplayedName(new I18nString("en", "Sign up to FURMS"))
 			.withFormInformation(new I18nString("en", "You were invited to become \${custom.role} in FURMS."))
 			.build()
