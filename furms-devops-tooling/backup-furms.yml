@@ -32,4 +32,4 @@
       path: 
       - "{{inventory_dir}}/inventory"
       - "{{inventory_dir}}/group_vars"
-      dest: "{{backupDir}}/{{now}}/ansible_config.tgz"
+      dest: "{{backupDir}}/{{now}}/ansible_config.tar.gz"

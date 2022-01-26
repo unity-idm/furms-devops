@@ -9,3 +9,6 @@
     login_password: "{{ dbPassword }}"
     target: "{{ backupDir }}/{{ now }}/{{ dbName }}.dump.tar"
 
+- name: "Compressing databse dump"
+  shell: gzip "{{ backupDir }}/{{ now }}/{{ dbName }}.dump.tar"
+

@@ -1,15 +1,29 @@
 ---
-- name: "Restore {{ dbName }} database"
-  vars:
-    dbDumpFileName: "{{ dbName }}.dump.tar"
-    dbDumpFileSubdir: "{{ backupDir + '/' + dbDumpDirName if dbDumpDirName is defined else dbDumpDirPath }}"
-    dbDumpFilePath: "{{ dbDumpFileSubdir }}/{{ dbDumpFileName }}"
-  postgresql_db:
-    state: restore
-    name: "{{ dbName }}"
-    login_host: "{{ dbHost.split(':')[0] }}"
-    port: "{{ 5432 if (dbHost.split(':')|length) != 2 else dbHost.split(':')[1] }}"
-    login_user: "{{ dbUsername }}"
-    login_password: "{{ dbPassword }}"
-    target: "{{ dbDumpFilePath }}"
-    target_opts: "--clean --if-exists"
+- hosts: local_only
+  tasks:
+  - set_fact:
+      dbDumpFileSubdir: "{{ backupDir + '/' + dbDumpDirName if dbDumpDirName is defined else dbDumpDirPath }}"
+  - set_fact:
+      dbDumpTGZFilePath: "{{ dbDumpFileSubdir }}/{{ dbName }}.dump.tar.gz"
+      dbDumpTARFilePath: "{{ dbDumpFileSubdir }}/{{ dbName }}.dump.tar"
+
+- hosts: local_only
+  tasks:
+  - stat: path={{ dbDumpTGZFilePath }}
+    register: targzFile
+  - shell: gunzip {{ dbDumpTGZFilePath }}
+    when: targzFile.stat.exists
+
+  - name: "Restore {{ dbName }} database"
+    postgresql_db:
+      state: restore
+      name: "{{ dbName }}"
+      login_host: "{{ dbHost.split(':')[0] }}"
+      port: "{{ 5432 if (dbHost.split(':')|length) != 2 else dbHost.split(':')[1] }}"
+      login_user: "{{ dbUsername }}"
+      login_password: "{{ dbPassword }}"
+      target: "{{ dbDumpTARFilePath }}"
+      target_opts: "--clean --if-exists"
+
+  - name: "Compressing databse dump"
+    shell: gzip {{ dbDumpTARFilePath }}
