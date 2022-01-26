@@ -27,9 +27,19 @@
       dbUsername: "{{unity.db.username}}"
       dbPassword: "{{unity.db.password}}"
 
-  - name: Backup inventory and group_vars
+  - name: Backup Ansible configuration
     archive:
       path: 
       - "{{inventory_dir}}/inventory"
       - "{{inventory_dir}}/group_vars"
+      - "{{trustStore.file}}"
+      - "{{unity.pki.keyStore.file}}"
+      - "{{unity.msgTemplates.files}}"
+      - "{{unity.msgTemplates.configuration}}"
+      - "{{furmsServer.pki.keyStore.file}}"
+      - "{{furmsServer.layout.cssStyle}}"
+      - "{{furmsServer.layout.panels.top}}"
+      - "{{furmsServer.layout.panels.left}}"
+      - "{{furmsServer.layout.panels.right}}"
+      - "{{furmsServer.layout.panels.bottom}}"
       dest: "{{backupDir}}/{{now}}/ansible_config.tar.gz"
