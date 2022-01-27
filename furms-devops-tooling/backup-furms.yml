@@ -27,19 +27,36 @@
       dbUsername: "{{unity.db.username}}"
       dbPassword: "{{unity.db.password}}"
 
-  - name: Backup Ansible configuration
-    archive:
-      path: 
+  - set_fact:
+      filesToArchive:
       - "{{inventory_dir}}/inventory"
       - "{{inventory_dir}}/group_vars"
       - "{{trustStore.file}}"
       - "{{unity.pki.keyStore.file}}"
-      - "{{unity.msgTemplates.files}}"
-      - "{{unity.msgTemplates.configuration}}"
       - "{{furmsServer.pki.keyStore.file}}"
-      - "{{furmsServer.layout.cssStyle}}"
-      - "{{furmsServer.layout.panels.top}}"
-      - "{{furmsServer.layout.panels.left}}"
-      - "{{furmsServer.layout.panels.right}}"
-      - "{{furmsServer.layout.panels.bottom}}"
+
+  - set_fact:
+      layout: "{{ furmsServer.layout | default({}) }}"
+  - set_fact:
+      panels: "{{ layout.panels | default({}) }}"
+  - set_fact:
+      cssStyle: "{{ layout.cssStyle if layout.cssStyle is defined else '' }}"
+      topPanel: "{{ panels.top if panels.top is defined else '' }}"
+      leftPanel: "{{ panels.left if panels.left is defined else '' }}"
+      rightPanel: "{{ panels.right if panels.right is defined else '' }}"
+      bottomPanel: "{{ panels.bottom if panels.bottom is defined else '' }}"
+  - set_fact:
+      msgTemplates: "{{ unity.msgTemplates | default({}) }}"
+  - set_fact:
+      msgTemplatesFiles: "{{ msgTemplates.files if msgTemplates.files is defined else '' }}"
+      msgTemplatesConfig: "{{ msgTemplates.configuration if msgTemplates.configuration is defined else '' }}"
+  - set_fact:
+      filesToArchive: "{{ filesToArchive + [item] }}"
+    with_items: "{{ [cssStyle, topPanel, leftPanel, rightPanel, bottomPanel, msgTemplatesFiles, msgTemplatesConfig] }}"
+    when: item != ''
+
+
+  - name: Backup Ansible configuration
+    archive:
+      path: "{{ filesToArchive }}"
       dest: "{{backupDir}}/{{now}}/ansible_config.tar.gz"
