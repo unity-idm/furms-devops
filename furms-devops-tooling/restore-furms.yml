@@ -1,6 +1,7 @@
 ---
 - import_playbook: restore-database-task.yml
   vars:
+    dumpFileBaseName: furmsDb
     dbName: "{{furmsServer.db.dbName}}"
     dbHost: "{{furmsServer.db.host}}"
     dbUsername: "{{furmsServer.db.username}}"
@@ -8,6 +9,7 @@
 
 - import_playbook: restore-database-task.yml
   vars:
+    dumpFileBaseName: unityDb
     dbName: "{{unity.db.dbName}}"
     dbHost: "{{unity.db.host}}"
     dbUsername: "{{unity.db.username}}"

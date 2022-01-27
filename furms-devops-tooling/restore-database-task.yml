@@ -4,8 +4,8 @@
   - set_fact:
       dbDumpFileSubdir: "{{ backupDir + '/' + dbDumpDirName if dbDumpDirName is defined else dbDumpDirPath }}"
   - set_fact:
-      dbDumpTGZFilePath: "{{ dbDumpFileSubdir }}/{{ dbName }}.dump.tar.gz"
-      dbDumpTARFilePath: "{{ dbDumpFileSubdir }}/{{ dbName }}.dump.tar"
+      dbDumpTGZFilePath: "{{ dbDumpFileSubdir }}/{{ dumpFileBaseName }}.dump.tar.gz"
+      dbDumpTARFilePath: "{{ dbDumpFileSubdir }}/{{ dumpFileBaseName }}.dump.tar"
 
 - hosts: local_only
   tasks:
