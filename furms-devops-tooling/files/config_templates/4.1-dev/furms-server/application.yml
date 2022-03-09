@@ -1,0 +1,89 @@
+app:
+   version: '@project.version@'
+
+server:
+   port: {{furmsServer.port}}
+   address: {{furmsServer.host}}
+   ssl:
+      key-store-type: {{furmsServer.pki.keyStore.type}}
+      key-store-password: {{furmsServer.pki.keyStore.password}}
+      key-store: ./{{keystoreTargetFileName}}
+      key-password: ${server.ssl.key-store-password}
+      enabled-protocols: TLSv1.2, TLSv1.3
+
+furms:
+   unity:
+      url: https://{{unity.advertisedHost}}
+      ssl:
+         trust-store: file:./{{truststoreTargetFileName}}
+         trust-store-password: {{trustStore.password}}
+
+      admin-url: https://{{unity.host}}:{{unity.port}}/rest-admin/v1
+      admin-user: {{unityApiClientUsername}}
+      admin-password: {{unityApiClientPassword}}
+      oAuth:
+         clientId: {{unityOauthClientUsername}}
+         clientSecret: {{unityOauthClientPassword}}
+   url: https://{{furmsServer.advertisedHost}}
+   psk:
+      centralIdPUser: {{furmsServer.preSharedKeys.cIdP.username}}
+      centralIdPSecret: {{furmsServer.preSharedKeys.cIdP.password}}
+   front:
+      maxSessionInactivity: {{furmsServer.ui.maxSessionInactivityInSeconds if furmsServer.ui.maxSessionInactivityInSeconds is defined else '1800'}}
+      secondsBeforeShowingSessionExpirationWarning: {{furmsServer.ui.secondsBeforeShowingLogoutWarning if furmsServer.ui.secondsBeforeShowingLogoutWarning is defined else '120'}}
+      language: en
+      layout:
+         styles:
+            custom: file:./layout/custom_style.css
+         panels:
+            top: file:./layout/top_panel.html
+            left: file:./layout/left_panel.html
+            right: file:./layout/right_panel.html
+            bottom: file:./layout/bottom_panel.html
+
+   sshkeys:
+      cleanStaleRequestsAfter: 1D
+   notification:
+      new-policy-template-id: policyAcceptanceNew
+      new-policy-revision-template-id: policyAcceptanceRevision
+      new-invitation-template-id: invitationNew
+      accepted-invitation-template-id: invitationAccepted
+      rejected-invitation-template-id: invitationRejected
+      new-application-template-id: applicationNew
+      accepted-application-template-id: applicationAccepted
+      rejected-application-template-id: applicationRejected
+      resource-usage-alarm-template-id: resourceUsageAlarm
+      resource-usage-alarm-without-url-template-id: resourceUsageAlarmWithoutUrl
+
+   invitations:
+      expiration-time-in-seconds: 604800
+      fenix-form: fenixForm
+      site-form: siteForm
+      community-form: communityForm
+      project-form: projectForm
+
+spring:
+   profiles:
+      active: demo-data-provisioning,workshop
+   datasource:
+      url: jdbc:postgresql://{{furmsServer.db.host}}/{{furmsServer.db.dbName}}
+      username: {{furmsServer.db.username}}
+      password: {{furmsServer.db.password}}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+         leak-detection-threshold: 5000  
+   rabbitmq:
+      host: {{furmsServer.broker.host}}
+      port: {{furmsServer.broker.port}}
+      username: {{furmsServer.broker.username}}
+      password: {{furmsServer.broker.password}}
+      connection-timeout: 10000
+      virtualHost: {{furmsServer.broker.virtualHost}}
+      ssl:
+          enabled: true
+          trustStore: ${furms.unity.ssl.trust-store}
+          trustStorePassword: ${furms.unity.ssl.trust-store-password}
+          algorithm: TLSv1.2
+
+logging:
+    config: ./logback.xml
