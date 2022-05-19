@@ -1,0 +1,47 @@
+# expected variables provided via --extra-vars 
+# * psql_db_name
+# * psql_db_user
+# * psql_db_password
+---   
+- name: Setup postgress user
+  hosts: all
+  become: true
+  tasks:
+    - name: "Create app database"
+      postgresql_db:
+        state: present
+        name: "{{ psql_db_name }}"
+      become_user: postgres
+
+    - name: "Create db user"
+      postgresql_user:
+        state: present
+        name: "{{ psql_db_user }}"
+        password: "{{ psql_db_password }}"
+      become_user: postgres
+
+    - name: "Grant db user access to app db"
+      postgresql_privs:
+        type: database
+        database: "{{ psql_db_name }}"
+        roles: "{{ psql_db_user }}"
+        grant_option: no
+        privs: all
+      become_user: postgres
+
+    - name: "Allow md5 connection for the db user"
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: host
+        databases: all
+        method: md5
+        users: "{{ psql_db_user }}"
+        create: true
+      become_user: postgres
+      notify: restart postgresql
+
+  handlers:
+    - name: restart postgresql
+      shell: systemctl restart postgresql
+
+
