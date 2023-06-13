@@ -13,6 +13,5 @@
     unityOauthClientPassword: "{{hostvars['localhost']['unityOauthClientPassword']}}"
   
 - import_playbook: setup-certs.yml
-  vars: 
-    targetHosts: furms_server
+
 
